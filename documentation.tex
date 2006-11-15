@@ -1,6 +1,7 @@
 % $Id$
 %\documentclass[11pt,a4paper]{scrartcl}
 \documentclass[11pt,a4paper]{article}
+\usepackage{tabularx}
 \usepackage{array}
 \usepackage{verbatim}
 %\newenvironment{myverbatim}{\verbatim}{\endverbatim}
@@ -402,7 +403,7 @@ You can browse the CVS repository via the web at\\
 \textbf{A:} mod\_auth(nz)\_ibmdb2 has to be loaded after the Websphere plugin. \\
 \\
 \textbf{Q:} Which versions of DB2 are supported? \\
-\textbf{A:} All DB2 Universal Database versions currently supported by IBM. I've tested the module with DB2 UDB v7.x, DB2 UDB v8.x and DB2 9. Older versions should work aswell. \\
+\textbf{A:} All DB2 Universal Database versions currently supported by IBM. I've tested the module with DB2 UDB v7.x, DB2 UDB v8.x and DB2 9. Older versions should work as well. \\
 \\
 \textbf{Q:} What is difference between mod\_auth\_ibmdb2 and mod\_authnz\_ibmdb2? \\
 \textbf{A:} mod\_authnz\_ibmdb2 is based on the new authentication backend provider scheme of Apache 2.2. This module will only work for Apache 2.2.x. \linebreak[4] mod\_auth\_ibmdb2 works for Apache 2.0.x and 1.x. There is no difference in functionality yet. \\
