@@ -189,6 +189,7 @@ LoadModule authnz_ibmdb2_module modules/mod_authnz_ibmdb2.so
 There is a {\tt man} directory in the path, where you have extracted the mod\_auth\_ibmdb2 package.\\ 
 \\
 Change into the man directory and run the script {\tt ./maninstall} 
+\newpage
 
 \subsection{Description of the module}
 \emph{mod\_auth\_ibmdb2} is an Apache authentication module using IBM DB2 as the backend database for storing user and group information. The module is designed for Apache 2.0.x and 1.x and supports several encryption methods.\\
@@ -226,6 +227,10 @@ Here is a list of the new directives\footnote{see Appendix \ref{default}} that c
 
 {\tt AuthIBMDB2GroupCondition} & & restrict result set \mbox{(no default)} \\
 
+{\tt AuthIBMDB2UserProc} & & stored procedure\footnotemark[2] for user authentication \mbox{(no default)} \\
+
+{\tt AuthIBMDB2GroupProc} & & stored procedure\footnotemark[2] for group authentication \mbox{(no default)} \\
+
 {\tt AuthIBMDB2Caching} & & user credentials are cached \mbox{(defaults to {\tt off})} \\
 
 {\tt AuthIBMDB2GroupCaching} & & group information is cached \mbox{(defaults to {\tt off})} \\
@@ -234,51 +239,63 @@ Here is a list of the new directives\footnote{see Appendix \ref{default}} that c
 
 {\tt AuthIBMDB2CacheLifetime} & & cache lifetime in seconds \mbox{(defaults to {\tt 300})} \\
 \end{tabular}
+\footnotetext[2]{stored procedure support is only available in mod\_authnz\_ibmdb2, see Appendix \ref{sp}}
+\addtocounter{footnote}{1}
 \normalsize
 \\\\
+If {\tt AuthIBMDB2Authoritative} is {\tt Off}, then iff the user is not found in the database, let other authentication modules try to find the user. Default is {\tt On}. \\
 \\
-If {\tt AuthIBMDB2Authoritative} is {\tt Off}, then iff the user is not found in the database, let other authentication modules try to find the user. Default is {\tt On}.\\
 \\
 If {\tt AuthIBMDB2KeepAlive} is {\tt On}, then the server instance will keep the IBM DB2 server connection open.  In this case, the first time the connection is made, it will use the current set of Host, User, and Password settings.  Subsequent changes to these will not affect this server, so they should all be the same in every htaccess file. 
 If you need to access multiple IBM DB2 servers for this authorization scheme from the same web server, then keep this setting {\tt Off} -- this will open a new connection to the server every time it needs one.  The values of the database and various tables and fields are always used from the current {\tt .htaccess} file settings.\\
 \\
-If {\tt AuthIBMDB2NoPasswd} is {\tt On}, then any password the user enters will be accepted as long as the user exists in the database.  Setting this also overrides the setting for {\tt AuthIBMDB2PasswordField} to be the same as {\tt AuthIBMDB2NameField} (so that the SQL statements still work when there is no password at all in the database, and to remain backward-compatible with the default values for these fields.)\\
+If {\tt AuthIBMDB2NoPasswd} is {\tt On}, then any password the user enters will be accepted as long as the user exists in the database.\\ Setting this also overrides the setting for {\tt AuthIBMDB2PasswordField} to be the same as {\tt AuthIBMDB2NameField} (so that the SQL statements still work when there is no password at all in the database, and to remain backward-compatible with the default values for these fields.)\\
 \\
-For groups, we use the same {\tt AuthIBMDB2NameField} as above for the user ID, and {\tt AuthIBMDB2GroupField} to specify the group name. {\tt AuthIBMDB2GroupTable} specifies the table to use to get the group info.  It defaults to the value of {\tt AuthIBMDB2UserTable}.  If you are not using groups, you do not need a {\tt groupname} field in your database, obviously.\\
+For groups, we use the same {\tt AuthIBMDB2NameField} as above for the user ID, and {\tt AuthIBMDB2GroupField} to specify the group name.\\ {\tt AuthIBMDB2GroupTable} specifies the table to use to get the group info.  It defaults to the value of {\tt AuthIBMDB2UserTable}.  If you are not using groups, you do not need a {\tt groupname} field in your database, obviously.\\
 \\
-The optional directives {\tt AuthIBMDB2UserCondition} and {\tt AuthIBMDB2GroupCondition} can be used to restrict queries made against the User and Group tables. The value for each of these should be a string that you want added to the end of the where-clause when querying each table.
+The optional directives {\tt AuthIBMDB2UserCondition} and \\{\tt AuthIBMDB2GroupCondition} can be used to restrict queries made against the User and Group tables. The value for each of these should be a string that you want added to the end of the where-clause when querying each table.
 For example, if your user table has an {\tt active} integer field and you only want users to be able to login, if that field is 1, you could use a directive like this:\\
 {\tt AuthIBMDB2UserCondition active=1}\\
 \\
+If {\tt AuthIBMDB2UserProc} is set, the named \hyperlink{husersp}{stored procedure}\footnote{see Appendix \ref{usersp}} is responsible for returning the password of the user in question to the module. It must return exact one value - the password. If set,\\ {\tt AuthIBMDB2UserTable}, {\tt AuthIBMDB2NameField}, {\tt AuthIBMDB2PasswordField}, {\tt AuthIBMDB2UserCondition} are ignored. If {\tt AuthIBMDB2NoPasswd} is {\tt On}, then the username has to be returned instead of the password. The stored procedure must have the following parameter format:
+\begin{verbatim}
+CREATE PROCEDURE user_procedure_name ( IN VARCHAR, OUT VARCHAR )
+\end{verbatim}
+\pagebreak
+If {\tt AuthIBMDB2GroupProc} is set, the named \hyperlink{hgroupsp}{stored procedure}\footnote{see Appendix \ref{groupsp}} is responsible for returning the groups the user in question belongs to. It must return an open cursor to the resultset. If set,\\ {\tt AuthIBMDB2GroupTable}, {\tt AuthIBMDB2NameField}, {\tt AuthIBMDB2GroupField}, {\tt AuthIBMDB2GroupCondition} are ignored. The stored procedure must have the following parameter format:
+\begin{verbatim}
+CREATE PROCEDURE group_procedure_name ( IN VARCHAR )
+\end{verbatim}
 If {\tt AuthIBMDB2Caching} ist set to {\tt On}, the user credentials are cached in a file defined in {\tt AuthIBMDB2CacheFile} and expires after {\tt AuthIBMDB2CacheLifetime} seconds.\\
 \\
 If {\tt AuthIBMDB2GroupCaching} ist set to {\tt On}, the group information is cached in a cache file that is named like the file specified in {\tt AuthIBMDB2CacheFile} but with the extension {\tt .grp}. The cache expires after {\tt AuthIBMDB2CacheLifetime} seconds.
-\subsection{Example}
+\subsection{Examples}
 First create the two tables within DB2:
 \begin{verbatim}
-CREATE TABLE USERS (
+CREATE TABLE WEB.USERS (
     USERNAME VARCHAR(40) NOT NULL,
     PASSWORD VARCHAR(40) );
 
-ALTER TABLE USERS
+ALTER TABLE WEB.USERS
     ADD PRIMARY KEY (USERNAME);
 
-CREATE TABLE GROUPS (
+CREATE TABLE WEB.GROUPS (
     USERNAME  VARCHAR(40) NOT NULL,
     GROUPNAME VARCHAR(40) NOT NULL );
 
-ALTER TABLE GROUPS
+ALTER TABLE WEB.GROUPS
     ADD PRIMARY KEY (USERNAME, GROUPNAME);
 \end{verbatim}
 Then you will have to insert records into the two tables:
 \marginpar{\footnotesize \flushleft {\tt apr\_md5} is a User Defined Function that is explained in the db2-auth-udfs part of this documentation.}
 \begin{verbatim}
-insert into users (username, password)
-    values ('test', apr_md5('testpwd'));
-insert into groups (username, groupname) 
-    values ('test', 'admin');
+INSERT INTO WEB.USERS (username, password)
+    VALUES ('test', apr_md5('testpwd'));
+INSERT INTO WEB.GROUPS (username, groupname) 
+    VALUES ('test', 'admin');
 \end{verbatim}
 Then add the following lines to your httpd.conf:
+\newpage
 \begin{verbatim}
 <Directory "/var/www/my_test_dir">
     AuthName                    "DB2 Authentication"
@@ -288,7 +305,7 @@ Then add the following lines to your httpd.conf:
     AuthIBMDB2User              db2inst1
     AuthIBMDB2Password          ibmdb2
     AuthIBMDB2Database          auth
-    AuthIBMDB2UserTable         users
+    AuthIBMDB2UserTable         web.users
     AuthIBMDB2NameField         username
     AuthIBMDB2PasswordField     passwd
 
@@ -297,11 +314,31 @@ Then add the following lines to your httpd.conf:
     AuthIBMDB2Authoritative     On
     AuthIBMDB2NoPasswd          Off
 
-    AuthIBMDB2GroupTable        groups
+    AuthIBMDB2GroupTable        web.groups
     AuthIBMDB2GroupField        groupname
 
     require                     group admin
     AllowOverride               None
+</Directory>
+\end{verbatim}
+If you want to use \hyperlink{hsps}{stored procedures} and caching, the directives would look like this:
+\begin{verbatim}
+<Directory "/var/www/my_test_dir">
+    AuthName                     "DB2 Authentication"
+    AuthType                     Basic
+    AuthBasicProvider            ibmdb2    # Apache 2.2.x only
+
+    AuthIBMDB2User               db2inst1
+    AuthIBMDB2Password           ibmdb2
+    AuthIBMDB2Database           auth
+    AuthIBMDB2UserProc           user_sp
+    AuthIBMDB2GroupProc          group_sp
+
+    AuthIBMDB2Caching            On
+    AuthIBMDB2GroupCaching       On
+
+    require                      group admin
+    AllowOverride                None
 </Directory>
 \end{verbatim}
 \newpage
@@ -330,13 +367,13 @@ To register the UDFs, connect to your database and run the script:
 db2 -tvf reg_udfs.ddl
 \end{verbatim}
 \subsection{Description of the UDFs}
-This UDF library delivers four functions\footnote{see Appendix \ref{udfreference} for a reference of the UDFs}:
-\begin{verbatim}
-md5
-apr_md5
-apr_crypt
-apr_sha1
-\end{verbatim}
+This UDF library delivers four functions\footnote{see Appendix \ref{udfreference} for a reference of the UDFs}:\\
+\\
+\hyperlink{hmd5}{\tt md5}\\
+\hyperlink{haprmd5}{\tt apr\_md5}\\
+\hyperlink{haprcrypt}{\tt apr\_crypt}\\
+\hyperlink{haprsha1}{\tt apr\_sha1}\\
+\\
 The {\tt md5} function is compatible to the PHP md5 function.\\
 The {\tt apr\_md5}, {\tt apr\_crypt} and {\tt apr\_sha1} functions are compatible to the Apache functions that are used in the {\tt htpasswd} utility.
 \newpage
@@ -405,8 +442,8 @@ You can browse the CVS repository via the web at\\
 \textbf{Q:} Which versions of DB2 are supported? \\
 \textbf{A:} All DB2 Universal Database versions currently supported by IBM. I've tested the module with DB2 UDB v7.x, DB2 UDB v8.x and DB2 9. Older versions should work as well. \\
 \\
-\textbf{Q:} What is difference between mod\_auth\_ibmdb2 and mod\_authnz\_ibmdb2? \\
-\textbf{A:} mod\_authnz\_ibmdb2 is based on the new authentication backend provider scheme of Apache 2.2. This module will only work for Apache 2.2.x. \linebreak[4] mod\_auth\_ibmdb2 works for Apache 2.0.x and 1.x. There is no difference in functionality yet. \\
+\textbf{Q:} What is the difference between mod\_auth\_ibmdb2 and mod\_authnz\_ibmdb2? \\
+\textbf{A:} mod\_authnz\_ibmdb2 is based on the new authentication backend provider scheme of Apache 2.2. This module will only work for Apache 2.2.x. \linebreak[4] mod\_auth\_ibmdb2 works for Apache 2.0.x and 1.x. \\
 \\
 \textbf{Q:} What platforms are supported? \\
 \textbf{A:} All POSIX platforms. I've compiled and tested the module on Linux and AIX 5L (5.1, 5.2, 5.3). \\
@@ -464,6 +501,8 @@ directive & & default value \\
 {\tt AuthIBMDB2NoPasswd} & & {\tt no} \\[0.5ex]
 {\tt AuthIBMDB2UserCondition} & & -- \\[0.5ex]
 {\tt AuthIBMDB2GroupCondition} & & -- \\[0.5ex]
+{\tt AuthIBMDB2UserProc} & & -- \\[0.5ex]
+{\tt AuthIBMDB2GroupProc} & & -- \\[0.5ex]
 {\tt AuthIBMDB2Caching} & & {\tt off} \\[0.5ex]
 {\tt AuthIBMDB2GroupCaching} & & {\tt off} \\[0.5ex]
 {\tt AuthIBMDB2CacheFile} & & {\tt /tmp/auth\_cred\_cache} \\[0.5ex]
@@ -471,6 +510,7 @@ directive & & default value \\
 \end{tabular}
 \newpage
 \section{UDF reference} \label{udfreference}
+\hypertarget{hmd5}{}
 \subsection{md5} \label{md5}
 \begin{verbatim}
 >>-MD5--(--expression--)---------------------------------------><
@@ -497,6 +537,7 @@ Examples:
       1 record(s) selected.
 \end{verbatim}
 \newpage
+\hypertarget{haprmd5}{}
 \subsection{apr\_md5} \label{aprmd5}
 \begin{verbatim}
 >>-APR_MD5--(--expression--)-----------------------------------><
@@ -523,6 +564,7 @@ Examples:
       1 record(s) selected.
 \end{verbatim}
 \newpage
+\hypertarget{haprcrypt}{}
 \subsection{apr\_crypt} \label{aprcrypt}
 \begin{verbatim}
 >>-APR_CRYPT--(--expression--)---------------------------------><
@@ -549,6 +591,7 @@ Examples:
       1 record(s) selected.
 \end{verbatim}
 \newpage
+\hypertarget{haprsha1}{}
 \subsection{apr\_sha1} \label{aprsha1}
 \begin{verbatim}
 >>-APR_SHA1--(--expression--)----------------------------------><
@@ -574,6 +617,16 @@ Examples:
 
       1 record(s) selected.
 \end{verbatim}
+\newpage
+\hypertarget{hsps}{}
+\section{Stored Procedure Support} \label{sp}
+\hypertarget{husersp}{}
+\subsection{user authentication} \label{usersp}
+T
+\newpage
+\hypertarget{hgroupsp}{}
+\subsection{group authentication} \label{groupsp}
+T
 
 \end{appendix}
 
