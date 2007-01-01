@@ -620,13 +620,88 @@ Examples:
 \newpage
 \hypertarget{hsps}{}
 \section{Stored Procedure Support} \label{sp}
+Stored procedures can minimize the network traffic and regarding the authentication module they can ease the administration. The module supports two types of stored procedures: one for user authentication and one for group authentication.\\
+\\
+For the following 2 sections we use these 3 tables:
+\\
+\begin{verbatim}
+CREATE TABLE WEB.USERS (
+    USERNAME VARCHAR(40) NOT NULL,
+    PASSWORD VARCHAR(40) );
+
+ALTER TABLE WEB.USERS
+    ADD PRIMARY KEY (USERNAME);
+
+CREATE TABLE WEB.GROUPS (
+    GROUPNAME VARCHAR(40) NOT NULL,
+    ACTIVE    INTEGER     NOT NULL );
+
+ALTER TABLE WEB.GROUPS
+    ADD PRIMARY KEY (GROUPNAME);
+
+CREATE TABLE WEB.MAPPING (
+    USERNAME  VARCHAR(40) NOT NULL,
+    GROUPNAME VARCHAR(40) NOT NULL );
+
+ALTER TABLE WEB.MAPPING
+    ADD PRIMARY KEY (USERNAME, GROUPNAME)
+    ADD FOREIGN KEY (USERNAME) REFERENCES WEB.USERS (USERNAME)
+    ADD FOREIGN KEY (GROUPNAME) REFERENCES WEB.GROUPS (GROUPNAME);
+\end{verbatim}
+\newpage
 \hypertarget{husersp}{}
 \subsection{user authentication} \label{usersp}
-T
+The stored procedure for user authentication is responsible for returning the password of the user in question to the module. It must return exact one value - the password. If {\tt AuthIBMDB2NoPasswd} is {\tt On}, then the username has to be returned instead of the password.\\
+\\
+The stored procedure must have the following parameter format:
+\begin{verbatim}
+CREATE PROCEDURE user_procedure_name ( IN VARCHAR, OUT VARCHAR )
+\end{verbatim}
+Example:
+\begin{verbatim}
+CREATE PROCEDURE user_sp
+(IN v_username VARCHAR(40), OUT v_password VARCHAR(40))
+LANGUAGE SQL
+BEGIN
+  SELECT password INTO v_password FROM web.users 
+  WHERE username = v_username;
+END@
+\end{verbatim}
+If {\tt AuthIBMDB2NoPasswd} is {\tt On}, then the stored procedure would have to look like this:
+\begin{verbatim}
+CREATE PROCEDURE user_sp
+(IN v_username VARCHAR(40), OUT v_password VARCHAR(40))
+LANGUAGE SQL
+BEGIN
+  SELECT username INTO v_password FROM web.users 
+  WHERE username = v_username;
+END@
+\end{verbatim}
 \newpage
 \hypertarget{hgroupsp}{}
 \subsection{group authentication} \label{groupsp}
-T
+The stored procedure for group authentication is responsible for returning the groups the user in question belongs to. It must return an open cursor to the resultset.\\
+\\
+The stored procedure must have the following parameter format:
+\begin{verbatim}
+CREATE PROCEDURE group_procedure_name ( IN VARCHAR )
+\end{verbatim}
+Example
+\begin{verbatim}
+CREATE PROCEDURE group_sp
+(IN v_username VARCHAR(40))
+LANGUAGE SQL
+DYNAMIC RESULT SETS 1
+BEGIN
+  DECLARE res CURSOR WITH RETURN FOR
+  SELECT m.groupname FROM web.groups g, web.mapping m 
+  WHERE m.groupname = g.groupname AND
+        m.username = v_username AND
+        g.active = 1;
+
+  OPEN res;
+END@
+\end{verbatim}
 
 \end{appendix}
 
