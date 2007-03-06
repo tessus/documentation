@@ -355,12 +355,14 @@ After changing the above setting, start the script\\
 \\
 \begin{tabular}{@{} lll @{}}
 Linux and AIX & & {\tt ./makeudf}\\
-Win32 (mingw) & & {\tt makemod.bat}\\
+Win32         & & {\tt makeudf.bat}\\
 \end{tabular}
 \\\\
 The UDFs are written in ANSI C and should compile on all platforms.
 You can use the {\tt bldrtn} script in your {\tt sqllib/samples/c} directory as a good start.
-The only thing that you have to change is to add the crypt library in the linking process.\\
+The only thing that you have to do is to install APR and \mbox{APR-util}.
+You can get APR and APR-util at \url{http://apr.apache.org/} \\
+Furthermore you need to add the compiler and linker flags for APR (see makeudf).\\
 \\
 To register the UDFs, connect to your database and run the script:
 \begin{verbatim}
@@ -376,6 +378,7 @@ This UDF library delivers four functions\footnote{see Appendix \ref{udfreference
 \\
 The {\tt md5} function is compatible to the PHP md5 function.\\
 The {\tt apr\_md5}, {\tt apr\_crypt} and {\tt apr\_sha1} functions are compatible to the Apache functions that are used in the {\tt htpasswd} utility.
+\paragraph{Note:}{In win32 environments {\tt apr\_crypt} returns the output of {\tt apr\_md5}.}
 \newpage
 
 \section{scripts}
