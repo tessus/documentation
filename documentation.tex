@@ -161,7 +161,7 @@ DB2PATH=/home/db2inst1/sqllib
 EXTRA_LFLAG="-Wl,-G,-blibpath:$DB2PATH/lib"     (for AIX)
 EXTRA_LFLAG="-Wl,-rpath,$DB2PATH/lib"           (for Linux)
 
-apxs -c -ldb2 -lcrypt -lgdbm $EXTRA_LFLAG mod_authnz_ibmdb2.c
+apxs -c -ldb2 $EXTRA_LFLAG mod_authnz_ibmdb2.c
 \end{verbatim}
 If the {\tt sqlcli1.h} header file cannot be found, add the {\tt -I} option to specify the
 directory where {\tt sqlcli1.h} can be found.
@@ -170,8 +170,8 @@ directory where {\tt libdb2.so} can be found.\\
 \\
 For example:
 \begin{verbatim}
-apxs -c -L/home/db2inst1/sqllib/lib                     \
-  -I/home/db2inst1/sqllib/include -ldb2 -lcrypt -lgdbm  \
+apxs -c -L/home/db2inst1/sqllib/lib        \
+  -I/home/db2inst1/sqllib/include -ldb2    \
   $EXTRA_LFLAG mod_authnz_ibmdb2.c
 \end{verbatim}
 After creating the module, it has to be moved to the Apache module directory. This is also done with the apxs utility:
