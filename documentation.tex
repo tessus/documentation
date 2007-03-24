@@ -7,7 +7,19 @@
 %\newenvironment{myverbatim}{\verbatim}{\endverbatim}
 \newenvironment{sverbatim}{\begingroup\small\verbatim}{\endverbatim\endgroup}
 \newcommand{\stt}[1]{\tt \small #1}
-\usepackage[bookmarks=true, bookmarksnumbered=true, pdftitle={Documentation for mod_auth(nz)_ibmdb2}, pdfauthor={Helmut K. C. Tessarek}, pdfcreator={pdfeTeX 3.141592-1.21a-2.2 (Web2C 7.5.4)}, colorlinks=false, linkcolor={blue}, citecolor={blue}, backref=true, breaklinks=true, pdftex]{hyperref}
+\usepackage[
+  bookmarks=true, 
+  bookmarksnumbered=true, 
+  pdftitle={Documentation for mod_auth(nz)_ibmdb2}, 
+  pdfauthor={Helmut K. C. Tessarek}, 
+  pdfcreator={{$ $Id$ $}}, 
+  colorlinks=false, 
+  linkcolor={blue}, 
+  citecolor={blue}, 
+  backref=true, 
+  breaklinks=true, 
+  pdftex
+]{hyperref}
 \date{\today}
 \author{Helmut K. C. Tessarek}
 \title{Documentation for\\
@@ -239,7 +251,7 @@ Here is a list of the new directives\footnote{see Appendix \ref{default}} that c
 
 {\tt AuthIBMDB2CacheLifetime} & & cache lifetime in seconds \mbox{(defaults to {\tt 300})} \\
 \end{tabular}
-\footnotetext[2]{stored procedure support is only available in mod\_authnz\_ibmdb2, see Appendix \ref{sp}}
+\footnotetext[2]{SP support is not available in mod\_auth\_ibmdb2 for Apache 1.x, see Appendix \ref{sp}}
 \addtocounter{footnote}{1}
 \normalsize
 \\\\
@@ -707,5 +719,12 @@ END@
 \end{verbatim}
 
 \end{appendix}
+
+\begin{center}
+\vspace{\fill}\ \newline
+{\tiny \rm $ $RCSfile$ $ }
+{\tiny \rm $ $Date$ $ }
+{\tiny \rm $ $Revision$ $ }
+\end{center}
 
 \end{document}
