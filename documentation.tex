@@ -1,12 +1,14 @@
 % $Id$
 %\documentclass[11pt,a4paper]{scrartcl}
-\documentclass[11pt,a4paper]{article}
+%\documentclass[11pt,a4paper]{article}
+\documentclass[11pt,letterpaper]{article}
 \usepackage{tabularx}
 \usepackage{array}
 \usepackage{verbatim}
-%\newenvironment{myverbatim}{\verbatim}{\endverbatim}
 \newenvironment{sverbatim}{\begingroup\small\verbatim}{\endverbatim\endgroup}
 \newcommand{\stt}[1]{\tt \small #1}
+\usepackage{lastpage}
+\usepackage{fancyhdr}
 \usepackage[
   bookmarks=true, 
   bookmarksnumbered=true, 
@@ -37,33 +39,41 @@ mod\_auth(nz)\_ibmdb2 is an Apache authentication module using IBM\textsuperscri
 \vfill
 
 \begin{center}
-\href{http://mod-auth-ibmdb2.sourceforge.net}{http://mod-auth-ibmdb2.sourceforge.net}
+\href{http://mod-auth-ibmdb2.sourceforge.net}{http://mod-auth-ibmdb2.sourceforge.net}\\
+
+{\tiny \rm $ $RCSfile$ $ }
+{\tiny \rm $ $Date$ $ }
+{\tiny \rm $ $Revision$ $ }
+
 \end{center}
 \newpage
 \renewcommand{\thepage}{\roman{page}}
 \tableofcontents
 \newpage
+\pagestyle{fancy}
+\lhead{}
+\chead{Documentation for mod\_auth(nz)\_ibmdb2}
+\rhead{}
+\rfoot{{\tiny \rm $ $Revision$ $}}
+\cfoot{\thepage\ / \pageref*{LastPage}}
+\lfoot{{\tiny \rm $ $Date$ $}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
 \renewcommand{\thepage}{\arabic{page}}
 \setcounter{page}{1}
 \section{mod\_auth(nz)\_ibmdb2}
 
-\subsection{Building mod\_auth\_ibmdb2}
+\subsection{Building mod\_auth(nz)\_ibmdb2}
 Log in as root user.\\
 \\
-Change the {\tt DB2PATH}, {\tt APACHEVERSION} and the {\tt APXS} variables
-in the {\tt makemod} script according to your environment:
+Change the {\tt DB2PATH} and the {\tt APXS} variables in the {\tt makemod} script according to your environment:
 \begin{verbatim}
 # Path settings
 
 DB2PATH=/home/db2inst1/sqllib
-APACHEVERSION=APACHE2
 APXS=/usr/local/apache/bin/apxs
 \end{verbatim}
 Set {\tt DB2PATH} to the directory where DB2 is accessed. This is usually the instance home directory.\\
-\\
-Set {\tt APACHEVERSION} to\\
-\hspace*{5ex} {\tt APACHE1} for Apache 1.x\\
-\hspace*{5ex} {\tt APACHE2} for Apache 2.0.x\\
 \\
 Set {\tt APXS} to the path that points to your apxs binary. The apxs binary is usually installed in the /$<$your apache home$>$/bin directory.\\
 \\
@@ -71,7 +81,7 @@ After changing the above settings, run the script {\tt ./makemod}\\
 \\
 Last but not least the DB2 environment has to be set in the Apache startscript. This is done by sourcing the {\tt db2profile} script, which is located in {\tt DB2PATH}.\\
 
-\subsection{Details on building mod\_auth\_ibmdb2}
+\subsection{Details on building mod\_auth(nz)\_ibmdb2}
 To build the module the Apache utility {\tt apxs} is used. The {\tt EXTRA\_LFLAG} needs to be specified so that the module will find the db2 library during runtime.
 \begin{verbatim}
 DB2PATH=/home/db2inst1/sqllib
@@ -79,15 +89,17 @@ DB2PATH=/home/db2inst1/sqllib
 EXTRA_LFLAG="-Wl,-G,-blibpath:$DB2PATH/lib"     (for AIX)
 EXTRA_LFLAG="-Wl,-rpath,$DB2PATH/lib"           (for Linux)
 \end{verbatim}
-If you are using Apache 1.x:
+\underline{mod\_authnz\_ibmdb2:}
 \begin{verbatim}
-apxs -c -D APACHE1 -ldb2 -lcrypt -lgdbm $EXTRA_LFLAG	\
-mod_auth_ibmdb2.c
+apxs -c -ldb2 $EXTRA_LFLAG mod_authnz_ibmdb2.c
 \end{verbatim}
-If you are using Apache 2.0.x:
+\underline{mod\_auth\_ibmdb2:}
 \begin{verbatim}
-apxs -c -D APACHE2 -ldb2 -lcrypt -lgdbm $EXTRA_LFLAG	\
-mod_auth_ibmdb2.c
+apxs -c -ldb2 $EXTRA_LFLAG mod_auth_ibmdb2.c
+\end{verbatim}
+\underline{mod\_auth\_ibmdb2 (Apache 1.x):}
+\begin{verbatim}
+apxs -c -ldb2 -lcrypt -lgdbm $EXTRA_LFLAG mod_auth_ibmdb2.c
 \end{verbatim}
 If the {\tt sqlcli1.h} header file cannot be found, add the {\tt -I} option to specify the
 directory where {\tt sqlcli1.h} can be found.
@@ -96,29 +108,40 @@ directory where {\tt libdb2.so} can be found.\\
 \\
 For example:
 \begin{verbatim}
-apxs -c -D APACHE2 -L/home/db2inst1/sqllib/lib          \
-  -I/home/db2inst1/sqllib/include -ldb2 -lcrypt -lgdbm  \
-  $EXTRA_LFLAG mod_auth_ibmdb2.c
+apxs -c -L/home/db2inst1/sqllib/lib        \
+  -I/home/db2inst1/sqllib/include -ldb2    \
+  $EXTRA_LFLAG mod_authnz_ibmdb2.c
 \end{verbatim}
-After creating the module, it has to be moved to the Apache module directory. This is also done with the apxs utility.\\
+After creating the module, it has to be moved to the Apache module directory. This is also done with the apxs utility:\\
 \\
-If you are using Apache 1.x:
+\underline{mod\_authnz\_ibmdb2:}
 \begin{verbatim}
-apxs -i mod_auth_ibmdb2.so
+apxs -i mod_authnz_ibmdb2.la
 \end{verbatim}
-If you are using Apache 2.0.x:
+\underline{mod\_auth\_ibmdb2:}
 \begin{verbatim}
 apxs -i mod_auth_ibmdb2.la
 \end{verbatim}
+\underline{mod\_auth\_ibmdb2 (Apache 1.x):}
+\begin{verbatim}
+apxs -i mod_auth_ibmdb2.so
+\end{verbatim}
 As the next step the DB2 environment has to be set in the Apache startscript. This is done by sourcing the {\tt db2profile} script, which is located in {\tt DB2PATH}.\\
 \\
-Finally, add the following directive to your httpd.conf and restart Apache:
+Finally, add the following directive to your httpd.conf and restart Apache:\\
+\\
+\underline{mod\_authnz\_ibmdb2:}
 \begin{verbatim}
-LoadModule ibmdb2_auth_module modules/mod_auth_ibmdb2.so
+LoadModule authnz_ibmdb2_module modules/mod_authnz_ibmdb2.so
 \end{verbatim}
-You may also need to add the following line (should only be necessary with earlier versions of Apache 1.x):
+\underline{mod\_auth\_ibmdb2:}
 \begin{verbatim}
-AddModule mod_auth_ibmdb2.c
+LoadModule ibmdb2_auth_module   modules/mod_auth_ibmdb2.so
+\end{verbatim}
+\underline{mod\_auth\_ibmdb2 (Apache 1.x):}
+\begin{verbatim}
+LoadModule ibmdb2_auth_module   modules/mod_auth_ibmdb2.so
+AddModule  mod_auth_ibmdb2.c
 \end{verbatim}
 
 \subsection{Building a static module (Apache 1.3.x)}
@@ -145,57 +168,6 @@ Source the db2profile:
 . /home/db2inst1/sqllib/db2profile
 \end{verbatim}
 Make the server by running {\tt make} in the {\tt src} directory. If you run {\tt httpd -l} after the executable has been built, you shoud see {\tt mod\_auth\_ibmdb2.c} in the list of compiled in modules.
-%\newpage
-
-\subsection{Building mod\_authnz\_ibmdb2}
-Log in as root user.\\
-\\
-Change the {\tt DB2PATH} and the {\tt APXS} variables in the {\tt makemod} script according to your environment:
-\begin{verbatim}
-# Path settings
-
-DB2PATH=/home/db2inst1/sqllib
-APXS=/usr/local/apache/bin/apxs
-\end{verbatim}
-Set {\tt DB2PATH} to the directory where DB2 is accessed. This is usually the instance home directory.\\
-\\
-Set {\tt APXS} to the path that points to your apxs binary. The apxs binary is usually installed in the /$<$your apache home$>$/bin directory.\\
-\\
-After changing the above settings, run the script {\tt ./makemod}\\
-\\
-Last but not least the DB2 environment has to be set in the Apache startscript. This is done by sourcing the {\tt db2profile} script, which is located in {\tt DB2PATH}.\\
-
-\subsection{Details on building mod\_authnz\_ibmdb2}
-To build the module the Apache utility {\tt apxs} is used. The {\tt EXTRA\_LFLAG} needs to be specified so that the module will find the db2 library during runtime.
-\begin{verbatim}
-DB2PATH=/home/db2inst1/sqllib
-
-EXTRA_LFLAG="-Wl,-G,-blibpath:$DB2PATH/lib"     (for AIX)
-EXTRA_LFLAG="-Wl,-rpath,$DB2PATH/lib"           (for Linux)
-
-apxs -c -ldb2 $EXTRA_LFLAG mod_authnz_ibmdb2.c
-\end{verbatim}
-If the {\tt sqlcli1.h} header file cannot be found, add the {\tt -I} option to specify the
-directory where {\tt sqlcli1.h} can be found.
-If the db2 library cannot be found, add the {\tt -L} option to specify the
-directory where {\tt libdb2.so} can be found.\\
-\\
-For example:
-\begin{verbatim}
-apxs -c -L/home/db2inst1/sqllib/lib        \
-  -I/home/db2inst1/sqllib/include -ldb2    \
-  $EXTRA_LFLAG mod_authnz_ibmdb2.c
-\end{verbatim}
-After creating the module, it has to be moved to the Apache module directory. This is also done with the apxs utility:
-\begin{verbatim}
-apxs -i mod_auth_ibmdb2.la
-\end{verbatim}
-As the next step the DB2 environment has to be set in the Apache startscript. This is done by sourcing the {\tt db2profile} script, which is located in {\tt DB2PATH}.\\
-\\
-Finally, add the following directive to your httpd.conf and restart Apache:
-\begin{verbatim}
-LoadModule authnz_ibmdb2_module modules/mod_authnz_ibmdb2.so
-\end{verbatim}
 
 \subsection{Installing the Manpages}
 There is a {\tt man} directory in the path, where you have extracted the mod\_auth\_ibmdb2 package.\\ 
@@ -254,9 +226,10 @@ Here is a list of the new directives\footnote{see Appendix \ref{default}} that c
 \footnotetext[2]{SP support is not available in mod\_auth\_ibmdb2 for Apache 1.x, see Appendix \ref{sp}}
 \addtocounter{footnote}{1}
 \normalsize
-\\\\
+
+\newpage
+\noindent
 If {\tt AuthIBMDB2Authoritative} is {\tt Off}, then iff the user is not found in the database, let other authentication modules try to find the user. Default is {\tt On}. \\
-\\
 \\
 If {\tt AuthIBMDB2KeepAlive} is {\tt On}, then the server instance will keep the IBM DB2 server connection open.  In this case, the first time the connection is made, it will use the current set of Host, User, and Password settings.  Subsequent changes to these will not affect this server, so they should all be the same in every htaccess file. 
 If you need to access multiple IBM DB2 servers for this authorization scheme from the same web server, then keep this setting {\tt Off} -- this will open a new connection to the server every time it needs one.  The values of the database and various tables and fields are always used from the current {\tt .htaccess} file settings.\\
@@ -268,12 +241,12 @@ For groups, we use the same {\tt AuthIBMDB2NameField} as above for the user ID, 
 The optional directives {\tt AuthIBMDB2UserCondition} and \\{\tt AuthIBMDB2GroupCondition} can be used to restrict queries made against the User and Group tables. The value for each of these should be a string that you want added to the end of the where-clause when querying each table.
 For example, if your user table has an {\tt active} integer field and you only want users to be able to login, if that field is 1, you could use a directive like this:\\
 {\tt AuthIBMDB2UserCondition active=1}\\
-\\
+\newpage
+\noindent
 If {\tt AuthIBMDB2UserProc} is set, the named \hyperlink{husersp}{stored procedure}\footnote{see Appendix \ref{usersp}} is responsible for returning the password of the user in question to the module. It must return exact one value - the password. If set,\\ {\tt AuthIBMDB2UserTable}, {\tt AuthIBMDB2NameField}, {\tt AuthIBMDB2PasswordField}, {\tt AuthIBMDB2UserCondition} are ignored. If {\tt AuthIBMDB2NoPasswd} is {\tt On}, then the username has to be returned instead of the password. The stored procedure must have the following parameter format:
 \begin{verbatim}
 CREATE PROCEDURE user_procedure_name ( IN VARCHAR, OUT VARCHAR )
 \end{verbatim}
-\pagebreak
 If {\tt AuthIBMDB2GroupProc} is set, the named \hyperlink{hgroupsp}{stored procedure}\footnote{see Appendix \ref{groupsp}} is responsible for returning the groups the user in question belongs to. It must return an open cursor to the resultset. If set,\\ {\tt AuthIBMDB2GroupTable}, {\tt AuthIBMDB2NameField}, {\tt AuthIBMDB2GroupField}, {\tt AuthIBMDB2GroupCondition} are ignored. The stored procedure must have the following parameter format:
 \begin{verbatim}
 CREATE PROCEDURE group_procedure_name ( IN VARCHAR )
@@ -281,6 +254,7 @@ CREATE PROCEDURE group_procedure_name ( IN VARCHAR )
 If {\tt AuthIBMDB2Caching} ist set to {\tt On}, the user credentials are cached in a file defined in {\tt AuthIBMDB2CacheFile} and expires after {\tt AuthIBMDB2CacheLifetime} seconds.\\
 \\
 If {\tt AuthIBMDB2GroupCaching} ist set to {\tt On}, the group information is cached in a cache file that is named like the file specified in {\tt AuthIBMDB2CacheFile} but with the extension {\tt .grp}. The cache expires after {\tt AuthIBMDB2CacheLifetime} seconds.
+\newpage
 \subsection{Examples}
 First create the two tables within DB2:
 \begin{verbatim}
@@ -307,7 +281,6 @@ INSERT INTO WEB.GROUPS (username, groupname)
     VALUES ('test', 'admin');
 \end{verbatim}
 Then add the following lines to your httpd.conf:
-\newpage
 \begin{verbatim}
 <Directory "/var/www/my_test_dir">
     AuthName                    "DB2 Authentication"
@@ -455,19 +428,19 @@ You can browse the CVS repository via the web at\\
 \textbf{A:} mod\_auth(nz)\_ibmdb2 has to be loaded after the Websphere plugin. \\
 \\
 \textbf{Q:} Which versions of DB2 are supported? \\
-\textbf{A:} All DB2 Universal Database versions currently supported by IBM. I've tested the module with DB2 UDB v7.x, DB2 UDB v8.x and DB2 9. Older versions should work as well. \\
+\textbf{A:} All DB2 Universal Database versions currently supported by IBM. I've tested the module with DB2 UDB v7.x, DB2 UDB v8.x and DB2 9 (9.1.x and 9.5.x). Older versions should work as well. \\
 \\
 \textbf{Q:} What is the difference between mod\_auth\_ibmdb2 and mod\_authnz\_ibmdb2? \\
 \textbf{A:} mod\_authnz\_ibmdb2 is based on the new authentication backend provider scheme of Apache 2.2. This module will only work for Apache 2.2.x. \linebreak[4] mod\_auth\_ibmdb2 works for Apache 2.0.x and 1.x. \\
 \\
 \textbf{Q:} What platforms are supported? \\
-\textbf{A:} All POSIX platforms. I've compiled and tested the module on Linux and AIX 5L (5.1, 5.2, 5.3). \\
+\textbf{A:} All POSIX platforms. I've compiled and tested the module on Linux and IBM AIX. Since the modules are using the APR libraries now, they can be compiled on Windows as well. \\
+\\
+\textbf{Q:} Why isn't there a binary release for .....? \\
+\textbf{A:} I don't have a development environment for every operating system. Furthermore I don't think that binary releases make sense for Unix style operating systems. \\
 \\
 \textbf{Q:} What is the package db2-auth-udfs for? \\
 \textbf{A:} This package contains User Defined Functions to generate passwords within DB2. \\
-\\
-\textbf{Q:} Why is the win32 version frozen? \\
-\textbf{A:} Most of the things that I want/(ed) to implement has to be implemented in a very different way on win32, since Windows does not support all of the GNU C functions. If someone wants to rewrite every release that I write - no problem - just let me know. \\
 \\
 \textbf{Q:} How do I get support? \\
 \textbf{A:} Please submit support requests at the \href{http://sourceforge.net/tracker/?atid=633718&group_id=103064&func=browse}{Support Request Tracker} (hosted by sourceforge). \\
@@ -476,9 +449,7 @@ You can browse the CVS repository via the web at\\
 \textbf{A:} Please submit bugs at the \href{http://sourceforge.net/tracker/?atid=633717&group_id=103064&func=browse}{Bug Tracker} (hosted by sourceforge). \\
 \\
 \textbf{Q:} How do I submit a feature request? \\
-\textbf{A:} Please submit feature requests at the \href{http://sourceforge.net/tracker/?atid=633720&group_id=103064&func=browse}{Feature Request Tracker} (hosted by sourceforge). \\ 
-\newpage
-
+\textbf{A:} Please submit feature requests at the \href{http://sourceforge.net/tracker/?atid=633720&group_id=103064&func=browse}{Feature Request Tracker} (hosted by sourceforge).
 \section{Links}
 \subsection{Official mod\_auth(nz)\_ibmdb2 website}
 \url{http://mod-auth-ibmdb2.sourceforge.net}
