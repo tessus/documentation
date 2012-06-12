@@ -1,0 +1,81 @@
+% $Id$
+%\documentclass[11pt,a4paper]{scrartcl}
+%\documentclass[11pt,a4paper]{article}
+\documentclass[11pt,letterpaper]{article}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{verbatim}
+\newenvironment{sverbatim}{\begingroup\small\verbatim}{\endverbatim\endgroup}
+\newcommand{\stt}[1]{\tt \small #1}
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+\usepackage[
+  bookmarks=true, 
+  bookmarksnumbered=true, 
+  pdftitle={Documentation for db2-auth-routines}, 
+  pdfauthor={Helmut K. C. Tessarek}, 
+  pdfcreator={$ $Id$ $}, 
+  colorlinks=false, 
+  linkcolor={blue}, 
+  citecolor={blue}, 
+  backref=true, 
+  breaklinks=true, 
+  pdftex
+]{hyperref}
+\date{\today}
+\author{Helmut K. C. Tessarek}
+\title{Documentation for\\
+db2-auth-routines}
+\begin{document}
+\maketitle
+\setcounter{page}{0}
+\thispagestyle{empty}
+\begin{abstract}
+db2-auth-routines is a package which provides \mbox{User Defined Functions} and \mbox{Stored Procedures} for IBM\textsuperscript{\textregistered}{} DB2\textsuperscript{\textregistered}{} to encrypt and verify \mbox{passwords}.
+\end{abstract}
+
+\vfill
+
+\begin{center}
+\href{http://mod-auth-ibmdb2.sourceforge.net}{http://mod-auth-ibmdb2.sourceforge.net}\\
+
+{\tiny \rm $ $RCSfile$ $ }
+{\tiny \rm $ $Date$ $ }
+{\tiny \rm $ $Revision$ $ }
+
+\end{center}
+\newpage
+\renewcommand{\thepage}{\roman{page}}
+\tableofcontents
+\newpage
+\pagestyle{fancy}
+\lhead{}
+\chead{Documentation for db2-auth-routines}
+\rhead{}
+\rfoot{{\tiny \rm $ $Revision$ $}}
+\cfoot{\thepage\ / \pageref*{LastPage}}
+\lfoot{{\tiny \rm $ $Date$ $}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\renewcommand{\thepage}{\arabic{page}}
+\setcounter{page}{1}
+
+% Include section: db2-auth-routines
+\input{routines}
+\newpage
+
+\begin{appendix}
+
+% Include reference: UDF and SP Reference
+\input{udf_sp_ref}
+
+\end{appendix}
+
+\begin{center}
+\vspace{\fill}\ \newline
+{\tiny \rm $ $RCSfile$ $ }
+{\tiny \rm $ $Date$ $ }
+{\tiny \rm $ $Revision$ $ }
+\end{center}
+
+\end{document}
