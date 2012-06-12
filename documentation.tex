@@ -26,7 +26,7 @@
 \author{Helmut K. C. Tessarek}
 \title{Documentation for\\
 mod\_auth(nz)\_ibmdb2\\
-db2-auth-udfs\\
+db2-auth-routines\\
 scripts}
 \begin{document}
 \maketitle
@@ -177,51 +177,55 @@ Change into the man directory and run the script {\tt ./maninstall}
 
 \subsection{Description of the module}
 \emph{mod\_auth\_ibmdb2} is an Apache authentication module using IBM DB2 as the backend database for storing user and group information. The module is designed for Apache 2.0.x and 1.x and supports several encryption methods.\\
-\emph{mod\_authnz\_ibmdb2} is designed for Apache 2.2.x and is based on the new authentication/authorization framework.\\
+\emph{mod\_authnz\_ibmdb2} is designed for Apache 2.2.x and later and is based on the new authentication/authorization framework.\\
 \\
 Here is a list of the new directives\footnote{see Appendix \ref{default}} that come with the module:\\
 \\
 \small
 \begin{tabular}{@{} ll >{\raggedright\arraybackslash}p{ 50ex } @{}}
-{\tt AuthIBMDB2User} & & user for connecting to the DB2 database \mbox{(no default)} \\
+{\tt AuthIBMDB2Database} & & database name \\
 
-{\tt AuthIBMDB2Password} & & password for connecting to the DB2 database \mbox{(no default)} \\
+{\tt AuthIBMDB2Hostname} & & database server hostname for uncataloged databases \\
 
-{\tt AuthIBMDB2Database} & & database name \mbox{(no default)} \\
+{\tt AuthIBMDB2Portnumber} & & database instance port \mbox{(default: 50000)} \\
 
-{\tt AuthIBMDB2UserTable} & & name of the user table \mbox{(no default)} \\
+{\tt AuthIBMDB2User} & & user for connecting to the DB2 database \\
 
-{\tt AuthIBMDB2GroupTable} & & name of the group table \mbox{(no default)} \\
+{\tt AuthIBMDB2Password} & & password for connecting to the DB2 database \\
 
-{\tt AuthIBMDB2NameField} & & name of the user field within the table \mbox{(defaults to {\tt username})} \\
+{\tt AuthIBMDB2UserTable} & & name of the user table \\
 
-{\tt AuthIBMDB2GroupField} & & name of the group field within the table \mbox{(defaults to {\tt groupname})} \\
+{\tt AuthIBMDB2GroupTable} & & name of the group table \\
 
-{\tt AuthIBMDB2PasswordField} & & name of the password field within the table \mbox{(defaults to {\tt password})} \\
+{\tt AuthIBMDB2NameField} & & name of the user column in the table \mbox{(default: {\tt username})} \\
 
-{\tt AuthIBMDB2CryptedPasswords} & & passwords are stored encrypted \mbox{(defaults to {\tt yes})} \\
+{\tt AuthIBMDB2GroupField} & & name of the group column in the table \mbox{(default: {\tt groupname})} \\
 
-{\tt AuthIBMDB2KeepAlive} & & connection kept open across requests \mbox{(defaults to {\tt yes})} \\
+{\tt AuthIBMDB2PasswordField} & & name of the password column in the table \mbox{(default: {\tt password})} \\
 
-{\tt AuthIBMDB2Authoritative} & & lookup is authoritative \mbox{(defaults to {\tt yes})} \\ 
+{\tt AuthIBMDB2CryptedPasswords} & & passwords are stored encrypted \mbox{(default: {\tt yes})} \\
 
-{\tt AuthIBMDB2NoPasswd} & & just check, if user is in usertable \mbox{(defaults to {\tt no})} \\
+{\tt AuthIBMDB2KeepAlive} & & connection kept open across requests \mbox{(default: {\tt yes})} \\
 
-{\tt AuthIBMDB2UserCondition} & & restrict result set \mbox{(no default)} \\
+{\tt AuthIBMDB2Authoritative} & & lookup is authoritative \mbox{(default: {\tt yes})} \\ 
 
-{\tt AuthIBMDB2GroupCondition} & & restrict result set \mbox{(no default)} \\
+{\tt AuthIBMDB2NoPasswd} & & just check, if user is in usertable \mbox{(default: {\tt no})} \\
 
-{\tt AuthIBMDB2UserProc} & & stored procedure\footnotemark[2] for user authentication \mbox{(no default)} \\
+{\tt AuthIBMDB2UserCondition} & & restrict result set \\
 
-{\tt AuthIBMDB2GroupProc} & & stored procedure\footnotemark[2] for group authentication \mbox{(no default)} \\
+{\tt AuthIBMDB2GroupCondition} & & restrict result set \\
 
-{\tt AuthIBMDB2Caching} & & user credentials are cached \mbox{(defaults to {\tt off})} \\
+{\tt AuthIBMDB2UserProc} & & stored procedure\footnotemark[2] for user authentication \\
 
-{\tt AuthIBMDB2GroupCaching} & & group information is cached \mbox{(defaults to {\tt off})} \\
+{\tt AuthIBMDB2GroupProc} & & stored procedure\footnotemark[2] for group authentication \\
 
-{\tt AuthIBMDB2CacheFile} & & path to cache file \mbox{(defaults to {\tt /tmp/auth\_cred\_cache})} \\
+{\tt AuthIBMDB2Caching} & & user credentials are cached \mbox{(default: {\tt off})} \\
 
-{\tt AuthIBMDB2CacheLifetime} & & cache lifetime in seconds \mbox{(defaults to {\tt 300})} \\
+{\tt AuthIBMDB2GroupCaching} & & group information is cached \mbox{(default: {\tt off})} \\
+
+{\tt AuthIBMDB2CacheFile} & & path to cache file \mbox{(default: {\tt /tmp/auth\_cred\_cache})} \\
+
+{\tt AuthIBMDB2CacheLifetime} & & cache lifetime in seconds \mbox{(default: {\tt 300})} \\
 \end{tabular}
 \footnotetext[2]{SP support is not available in mod\_auth\_ibmdb2 for Apache 1.x, see Appendix \ref{sp}}
 \addtocounter{footnote}{1}
@@ -243,7 +247,7 @@ For example, if your user table has an {\tt active} integer field and you only w
 {\tt AuthIBMDB2UserCondition active=1}\\
 \newpage
 \noindent
-If {\tt AuthIBMDB2UserProc} is set, the named \hyperlink{husersp}{stored procedure}\footnote{see Appendix \ref{usersp}} is responsible for returning the password of the user in question to the module. It must return exact one value - the password. If set,\\ {\tt AuthIBMDB2UserTable}, {\tt AuthIBMDB2NameField}, {\tt AuthIBMDB2PasswordField}, {\tt AuthIBMDB2UserCondition} are ignored. If {\tt AuthIBMDB2NoPasswd} is {\tt On}, then the username has to be returned instead of the password. The stored procedure must have the following parameter format:
+If {\tt AuthIBMDB2UserProc} is set, the named \hyperlink{husersp}{stored procedure}\footnote{see Appendix \ref{usersp}} is responsible for returning the password of the user in question to the module. It must return exactly one value and row - the password. If set,\\ {\tt AuthIBMDB2UserTable}, {\tt AuthIBMDB2NameField}, {\tt AuthIBMDB2PasswordField}, {\tt AuthIBMDB2UserCondition} are ignored. If {\tt AuthIBMDB2NoPasswd} is {\tt On}, then the username has to be returned instead of the password. The stored procedure must have the following parameter format:
 \begin{verbatim}
 CREATE PROCEDURE user_procedure_name ( IN VARCHAR, OUT VARCHAR )
 \end{verbatim}
@@ -328,87 +332,12 @@ If you want to use \hyperlink{hsps}{stored procedures} and caching, the directiv
 \end{verbatim}
 \newpage
 
-\section{db2-auth-udfs}
-\subsection{Building the library and registering the UDFs}
-Login as the instance user. Change the {\tt DB2PATH} variable in the {\tt makeudf} script for your environment.
-\begin{verbatim}
-DB2PATH=/home/db2inst1/sqllib
-\end{verbatim}
-Set {\tt DB2PATH} to the directory where DB2 is accessed. This is usually the instance home directory.\\
-\\
-After changing the above setting, start the script\\
-\\
-\begin{tabular}{@{} lll @{}}
-Linux and AIX & & {\tt ./makeudf}\\
-Win32         & & {\tt makeudf.bat}\\
-\end{tabular}
-\\\\
-The UDFs are written in ANSI C and should compile on all platforms.
-You can use the {\tt bldrtn} script in your {\tt sqllib/samples/c} directory as a good start.
-The only thing that you have to do is to install APR and \mbox{APR-util}.
-You can get APR and APR-util at \url{http://apr.apache.org/} \\
-Furthermore you need to add the compiler and linker flags for APR (see makeudf).\\
-\\
-To register the UDFs, connect to your database and run the script:
-\begin{verbatim}
-db2 -tvf reg_udfs.ddl
-\end{verbatim}
-\subsection{Description of the UDFs}
-This UDF library delivers four functions\footnote{see Appendix \ref{udfreference} for a reference of the UDFs}:\\
-\\
-\hyperlink{hmd5}{\tt md5}\\
-\hyperlink{haprmd5}{\tt apr\_md5}\\
-\hyperlink{haprcrypt}{\tt apr\_crypt}\\
-\hyperlink{haprsha1}{\tt apr\_sha1}\\
-\\
-The {\tt md5} function is compatible to the PHP md5 function.\\
-The {\tt apr\_md5}, {\tt apr\_crypt} and {\tt apr\_sha1} functions are compatible to the Apache functions that are used in the {\tt htpasswd} utility.
-\paragraph{Note:}{In win32 environments {\tt apr\_crypt} returns the output of {\tt apr\_md5}.}
+% Include section: db2-auth-routines
+\input{routines}
 \newpage
 
-\section{scripts}
-\subsection{Description of the scripts}
-There are four scripts to import the users and groups from already existing user and/or group files into DB2. They are written in php, so you should have the php cli binary in your {\tt /usr/local/bin} directory.\\
-\\
-The script {\tt sync\_pwds} is for syncing the system users with a table within your DB2 database.\\
-\\
-You have to change the settings in the {\tt config.php} file for your environment.\\
-\\
-Here is a table of the relation between the directives for the \emph{mod\_auth(nz)\_ibmdb2} module
-and the settings in the {\tt config.php} file:\\
-\\
-\begin{tabular}{@{} lll @{}}
-{\tt config.php} & & {\tt module directive}\\
-\hline
-& & \\
-{\tt \$dbname} & {\tt = "auth";} & {\tt AuthIBMDB2Database} \\
-{\tt \$dbuser} & {\tt = "db2inst1";} & {\tt AuthIBMDB2User} \\
-{\tt \$dbpwd} & {\tt = "db2inst1";} & {\tt AuthIBMDB2Password} \\
-& & \\
-{\tt \$usertable} & {\tt = "users";} & {\tt AuthIBMDB2UserTable} \\
-{\tt \$grouptable} & {\tt = "groups";} & {\tt AuthIBMDB2GroupTable} \\
-& & \\
-{\tt \$namefield} & {\tt = "username";} & {\tt AuthIBMDB2NameField} \\	
-{\tt \$passwordfield} & {\tt = "password";} & {\tt AuthIBMDB2PasswordField} \\
-{\tt \$groupfield} & {\tt = "groupname";} & {\tt AuthIBMDB2GroupField} \\
-\end{tabular}
-\\
-\paragraph{Attention:}{The scripts were developed on Linux, therefore they will only work on systems where the {\tt /etc/passwd}, the {\tt /etc/shadow},the {\tt /etc/group} and the {\tt /etc/gshadow} are in the same form as on Linux systems.}
-\paragraph{Note:}{{\tt user\_imp} and {\tt group\_imp} will work on all systems, because these scripts don't rely on above mentioned files.}
-\subsection{Examples}
-If the settings in the {\tt config.php} are as above and you execute the {\tt ./user\_etc\_imp} script following happens:\\
-\\
-All users (except system users like root or mail) are imported from the linux box into the table {\tt users} in the database {\tt auth}.
-The table {\tt users} has {\tt username} as the columnname for the users and {\tt password} as the columnname for the passwords.\\
-\\
-To import the users from an existing htpasswd users file, just run the script
-\begin{verbatim}
-./user_imp <path-to-userfile>
-\end{verbatim}
-To import the group information from an existing Apache group file, run the script
-\begin{verbatim}
-./group_imp <path-to-groupfile>
-\end{verbatim}
+% Include section: scripts
+\input{scripts}
 \newpage
 
 \section{CVS access}
@@ -423,47 +352,8 @@ You can browse the CVS repository via the web at\\
 \url{http://www.evermeet.cx/cvs/mod_auth_ibmdb2}
 \newpage
 
-\section{FAQ}
-\textbf{Q:} IBM's Websphere plugin and mod\_auth(nz)\_ibmdb2 seem to break each other. What can I do? \\
-\textbf{A:} mod\_auth(nz)\_ibmdb2 has to be loaded after the Websphere plugin. \\
-\\
-\textbf{Q:} Which versions of DB2 are supported? \\
-\textbf{A:} All DB2 Universal Database versions currently supported by IBM. I've tested the module with DB2 UDB v7.x, DB2 UDB v8.x and DB2 9 (9.1.x and 9.5.x). Older versions should work as well. \\
-\\
-\textbf{Q:} What is the difference between mod\_auth\_ibmdb2 and mod\_authnz\_ibmdb2? \\
-\textbf{A:} mod\_authnz\_ibmdb2 is based on the new authentication backend provider scheme of Apache 2.2. This module will only work for Apache 2.2.x. \linebreak[4] mod\_auth\_ibmdb2 works for Apache 2.0.x and 1.x. \\
-\\
-\textbf{Q:} What platforms are supported? \\
-\textbf{A:} All POSIX platforms. I've compiled and tested the module on Linux and IBM AIX. Since the modules are using the APR libraries now, they can be compiled on Windows as well. \\
-\\
-\textbf{Q:} Why isn't there a binary release for .....? \\
-\textbf{A:} I don't have a development environment for every operating system. Furthermore I don't think that binary releases make sense for Unix style operating systems. \\
-\\
-\textbf{Q:} What is the package db2-auth-udfs for? \\
-\textbf{A:} This package contains User Defined Functions to generate passwords within DB2. \\
-\\
-\textbf{Q:} How do I get support? \\
-\textbf{A:} Please submit support requests at the \href{http://sourceforge.net/tracker/?atid=633718&group_id=103064&func=browse}{Support Request Tracker} (hosted by sourceforge). \\
-\\
-\textbf{Q:} How do I submit bugs? \\
-\textbf{A:} Please submit bugs at the \href{http://sourceforge.net/tracker/?atid=633717&group_id=103064&func=browse}{Bug Tracker} (hosted by sourceforge). \\
-\\
-\textbf{Q:} How do I submit a feature request? \\
-\textbf{A:} Please submit feature requests at the \href{http://sourceforge.net/tracker/?atid=633720&group_id=103064&func=browse}{Feature Request Tracker} (hosted by sourceforge).
-\section{Links}
-\subsection{Official mod\_auth(nz)\_ibmdb2 website}
-\url{http://mod-auth-ibmdb2.sourceforge.net}
-\subsection{Support Requests}
-\url{http://sourceforge.net/tracker/?atid=633718&group_id=103064&func=browse}
-\subsection{Feature Requests}
-\url{http://sourceforge.net/tracker/?atid=633720&group_id=103064&func=browse}
-\subsection{Bugs}
-\url{http://sourceforge.net/tracker/?atid=633717&group_id=103064&func=browse}
-\subsection{Release / Update Announcement Mailing List}
-\url{http://lists.sourceforge.net/lists/subscribe/mod-auth-ibmdb2-announce}
-\subsection{developerWorks article}
-mod\_auth\_ibmdb2: A novel authentication method for Apache\\
-\url{http://www.ibm.com/developerworks/db2/library/techarticle/dm-0407tessarek/}
+% Include section: FAQ
+\input{faq}
 \newpage
 
 \begin{appendix}
@@ -473,9 +363,11 @@ mod\_auth\_ibmdb2: A novel authentication method for Apache\\
 directive & & default value \\
 \hline
 & & \\
+{\tt AuthIBMDB2Database} & & -- \\[0.5ex]
+{\tt AuthIBMDB2Hostname} & & -- \\[0.5ex]
+{\tt AuthIBMDB2Portnumber} & & {\tt 50000} \\[0.5ex]
 {\tt AuthIBMDB2User} & & -- \\[0.5ex]
 {\tt AuthIBMDB2Password} & & -- \\[0.5ex]
-{\tt AuthIBMDB2Database} & & -- \\[0.5ex]
 {\tt AuthIBMDB2UserTable} & & -- \\[0.5ex]
 {\tt AuthIBMDB2GroupTable} & & -- \\[0.5ex]
 {\tt AuthIBMDB2NameField} & & {\tt username} \\[0.5ex]
@@ -495,115 +387,11 @@ directive & & default value \\
 {\tt AuthIBMDB2CacheLifetime} & & {\tt 300} \\[0.5ex]
 \end{tabular}
 \newpage
-\section{UDF reference} \label{udfreference}
-\hypertarget{hmd5}{}
-\subsection{md5} \label{md5}
-\begin{verbatim}
->>-MD5--(--expression--)---------------------------------------><
-\end{verbatim}
-MD5 hash. The {\tt md5} function is compatible to the PHP md5 function.\\
-\\
-The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 120 bytes.\\
-\\
-The result of the function is VARCHAR(32). The result can be null; if the argument is null, the result is the null value.\\
-\\
-Examples:
-\begin{verbatim}
-1)
-    INSERT INTO USERS (username, password)
-       VALUES ('test', md5('testpwd'))
 
-2)
-    SELECT md5( 'testpwd' ) FROM SYSIBM.SYSDUMMY1
-
-    1
-    --------------------------------
-    342df5b036b2f28184536820af6d1caf
-
-      1 record(s) selected.
-\end{verbatim}
+% Include reference: UDF and SP Reference
+\input{udf_sp_ref}
 \newpage
-\hypertarget{haprmd5}{}
-\subsection{apr\_md5} \label{aprmd5}
-\begin{verbatim}
->>-APR_MD5--(--expression--)-----------------------------------><
-\end{verbatim}
-Seeded MD5 hash. The {\tt apr\_md5} function is compatible to the Apache function that is used in the {\tt htpasswd} utility.\\
-\\
-The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 120 bytes.\\
-\\
-The result of the function is VARCHAR(37). The result can be null; if the argument is null, the result is the null value.\\
-\\
-Examples:
-\begin{verbatim}
-1)
-    INSERT INTO USERS (username, password)
-       VALUES ('test', apr_md5('testpwd'))
 
-2)
-    SELECT apr_md5( 'testpwd' ) FROM SYSIBM.SYSDUMMY1
-
-    1
-    -------------------------------------
-    $apr1$HsTNH...$bmlPUSoPOF/Qhznl.sAq6/
-
-      1 record(s) selected.
-\end{verbatim}
-\newpage
-\hypertarget{haprcrypt}{}
-\subsection{apr\_crypt} \label{aprcrypt}
-\begin{verbatim}
->>-APR_CRYPT--(--expression--)---------------------------------><
-\end{verbatim}
-Unix crypt. The {\tt apr\_crypt} is compatible to the Apache function that is used in the {\tt htpasswd} utility.\\
-\\
-The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 120 bytes.\\
-\\
-The result of the function is VARCHAR(13). The result can be null; if the argument is null, the result is the null value.\\
-\\
-Examples:
-\begin{verbatim}
-1)
-    INSERT INTO USERS (username, password)
-       VALUES ('test', apr_crypt('testpwd'))
-
-2)
-    SELECT apr_crypt( 'testpwd' ) FROM SYSIBM.SYSDUMMY1
-
-    1
-    -------------
-    cqs7uOvz8KBlk
-
-      1 record(s) selected.
-\end{verbatim}
-\newpage
-\hypertarget{haprsha1}{}
-\subsection{apr\_sha1} \label{aprsha1}
-\begin{verbatim}
->>-APR_SHA1--(--expression--)----------------------------------><
-\end{verbatim}
-SHA1 algorithm. Not used in \emph{mod\_auth(nz)\_ibmdb2}. The {\tt apr\_sha1} is compatible to the Apache function that is used in the {\tt htpasswd} utility.\\
-\\
-The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 120 bytes.\\
-\\
-The result of the function is VARCHAR(33). The result can be null; if the argument is null, the result is the null value.\\
-\\
-Examples:
-\begin{verbatim}
-1)
-    INSERT INTO USERS (username, password)
-       VALUES ('test', apr_sha1('testpwd'))
-
-2)
-    SELECT apr_sha1( 'testpwd' ) FROM SYSIBM.SYSDUMMY1
-
-    1
-    ---------------------------------
-    {SHA}mO8HWOaqxvmp4Rl1SMgZC3LJWB0=
-
-      1 record(s) selected.
-\end{verbatim}
-\newpage
 \hypertarget{hsps}{}
 \section{Stored Procedure Support} \label{sp}
 Stored procedures can minimize the network traffic and regarding the authentication module they can ease the administration. The module supports two types of stored procedures: one for user authentication and one for group authentication.\\
