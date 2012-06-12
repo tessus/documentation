@@ -1,0 +1,41 @@
+\section{FAQ}
+\textbf{Q:} IBM's Websphere plugin and mod\_auth(nz)\_ibmdb2 seem to break each other. What can I do? \\
+\textbf{A:} mod\_auth(nz)\_ibmdb2 has to be loaded after the Websphere plugin. \\
+\\
+\textbf{Q:} Which versions of DB2 are supported? \\
+\textbf{A:} All DB2 versions currently supported by IBM. I've tested the module with DB2 UDB v7.x, DB2 UDB v8.x, DB2 9.x, DB2 10. Older versions should work as well. \\
+\\
+\textbf{Q:} What is the difference between mod\_auth\_ibmdb2 and mod\_authnz\_ibmdb2? \\
+\textbf{A:} mod\_authnz\_ibmdb2 is based on the new authentication backend provider scheme of Apache 2.2. This module will only work for Apache 2.2 and later. \linebreak[4] mod\_auth\_ibmdb2 works for Apache 2.0.x and 1.x. \\
+\\
+\textbf{Q:} What platforms are supported? \\
+\textbf{A:} All POSIX platforms. I've compiled and tested the module on Linux and IBM AIX. Since the modules are using the APR libraries now, they can be compiled on Windows as well. \\
+\\
+\textbf{Q:} Why isn't there a binary release for .....? \\
+\textbf{A:} I don't have a development environment for every operating system. Furthermore I don't think that binary releases make sense for Unix style operating systems. \\
+\\
+\textbf{Q:} What is the package db2-auth-routines for? \\
+\textbf{A:} This package contains User Defined Functions and Stored Procedures to encrypt and validate passwords within DB2. \\
+\\
+\textbf{Q:} How do I get support? \\
+\textbf{A:} Please submit support requests at the \href{http://sourceforge.net/tracker/?atid=633718&group_id=103064&func=browse}{Support Request Tracker} (hosted by sourceforge). \\
+\\
+\textbf{Q:} How do I submit bugs? \\
+\textbf{A:} Please submit bugs at the \href{http://sourceforge.net/tracker/?atid=633717&group_id=103064&func=browse}{Bug Tracker} (hosted by sourceforge). \\
+\\
+\textbf{Q:} How do I submit a feature request? \\
+\textbf{A:} Please submit feature requests at the \href{http://sourceforge.net/tracker/?atid=633720&group_id=103064&func=browse}{Feature Request Tracker} (hosted by sourceforge).
+\section{Links}
+\subsection{Official mod\_auth(nz)\_ibmdb2 website}
+\url{http://mod-auth-ibmdb2.sourceforge.net}
+\subsection{Support Requests}
+\url{http://sourceforge.net/tracker/?atid=633718&group_id=103064&func=browse}
+\subsection{Feature Requests}
+\url{http://sourceforge.net/tracker/?atid=633720&group_id=103064&func=browse}
+\subsection{Bugs}
+\url{http://sourceforge.net/tracker/?atid=633717&group_id=103064&func=browse}
+\subsection{Release / Update Announcement Mailing List}
+\url{http://lists.sourceforge.net/lists/subscribe/mod-auth-ibmdb2-announce}
+\subsection{developerWorks article}
+mod\_auth\_ibmdb2: A novel authentication method for Apache\\
+\url{http://www.ibm.com/developerworks/db2/library/techarticle/dm-0407tessarek/}

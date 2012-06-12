@@ -1,0 +1,40 @@
+\section{db2-auth-routines}
+\subsection{Building the library and registering the UDFs and SPs}
+Login as the instance user. Change the {\tt DB2PATH} variable in the {\tt makertn} script for your environment.
+\begin{verbatim}
+DB2PATH=/home/db2inst1/sqllib
+\end{verbatim}
+Set {\tt DB2PATH} to the directory where DB2 is accessed. This is usually the instance home directory.\\
+\\
+After changing the above setting, start the script\\
+\\
+\begin{tabular}{@{} lll @{}}
+Linux and AIX & & {\tt ./makertn}\\
+Win32         & & {\tt makertn.bat}\\
+\end{tabular}
+\\\\
+The UDFs and SPs are written in ANSI C and should compile on all platforms.
+You can use the {\tt bldrtn} script in your {\tt sqllib/samples/c} directory as a good start.
+The only thing that you have to do is to install APR and \mbox{APR-util}.
+You can get APR and APR-util at \url{http://apr.apache.org/} \\
+Furthermore you need to add the compiler and linker flags for APR (see makertn).\\
+\\
+To register the UDFs and SPs, connect to your database and run the script:
+\begin{verbatim}
+db2 -tvf register.ddl
+\end{verbatim}
+\newpage
+\subsection{Description of the UDFs and SPs}
+This library delivers five routines\footnote{see Appendix \ref{rtnreference} for a reference of the UDFs and SPs}:\\
+\\
+\hyperlink{hmd5}{\tt md5}\\
+\hyperlink{haprmd5}{\tt apr\_md5}\\
+\hyperlink{haprcrypt}{\tt apr\_crypt}\\
+\hyperlink{haprsha1}{\tt apr\_sha1}\\
+\hyperlink{hvalidatepw}{\tt validate\_pw}\\
+\\
+The {\tt md5} routine is compatible to the PHP md5 function.\\
+The {\tt apr\_md5}, {\tt apr\_crypt} and {\tt apr\_sha1} routines are compatible to the Apache functions that are used in the {\tt htpasswd} utility.\\
+\\
+{\tt validate\_pw} can be used to validate a password against a hash.
+\paragraph{Note:}{In win32 environments {\tt apr\_crypt} returns the output of {\tt apr\_md5}.}

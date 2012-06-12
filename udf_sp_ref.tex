@@ -1,0 +1,201 @@
+\section{UDF and SP reference} \label{rtnreference}
+\hypertarget{hmd5}{}
+\subsection{md5} \label{md5}
+\begin{verbatim}
+>>-MD5--(--expression--)---------------------------------------><
+
+>>-MD5--(--expression--,--hash--)------------------------------><
+\end{verbatim}
+MD5 hash. The {\tt md5} routine is compatible to the PHP md5 function.\\
+\\
+The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 120 bytes.\\
+\\
+The result of the function is CHAR(32). The result can be null; if the argument is null, the result is the null value.\\
+\\
+Examples:
+\begin{verbatim}
+1)
+    INSERT INTO USERS (username, password)
+       VALUES ('test', md5('testpwd'))
+
+2)
+    SELECT md5( 'testpwd' ) FROM SYSIBM.SYSDUMMY1
+
+    1
+    --------------------------------
+    342df5b036b2f28184536820af6d1caf
+
+      1 record(s) selected.
+
+3)
+    CALL md5('testpwd', ?)
+
+      Value of output parameters
+      --------------------------
+      Parameter Name  : HASH
+      Parameter Value : 342df5b036b2f28184536820af6d1caf
+
+      Return Status = 0
+\end{verbatim}
+\newpage
+\hypertarget{haprmd5}{}
+\subsection{apr\_md5} \label{aprmd5}
+\begin{verbatim}
+>>-APR_MD5--(--expression--)-----------------------------------><
+
+>>-APR_MD5--(--expression--,--hash--)--------------------------><
+\end{verbatim}
+Seeded MD5 hash. The {\tt apr\_md5} routine is compatible to the Apache function that is used in the {\tt htpasswd} utility.\\
+\\
+The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 120 bytes.\\
+\\
+The result of the function is CHAR(37). The result can be null; if the argument is null, the result is the null value.\\
+\\
+Examples:
+\begin{verbatim}
+1)
+    INSERT INTO USERS (username, password)
+       VALUES ('test', apr_md5('testpwd'))
+
+2)
+    SELECT apr_md5( 'testpwd' ) FROM SYSIBM.SYSDUMMY1
+
+    1
+    -------------------------------------
+    $apr1$HsTNH...$bmlPUSoPOF/Qhznl.sAq6/
+
+      1 record(s) selected.
+
+3)
+    CALL apr_md5('testpwd', ?)
+
+      Value of output parameters
+      --------------------------
+      Parameter Name  : HASH
+      Parameter Value : $apr1$HsTNH...$bmlPUSoPOF/Qhznl.sAq6/
+
+      Return Status = 0
+\end{verbatim}
+\newpage
+\hypertarget{haprcrypt}{}
+\subsection{apr\_crypt} \label{aprcrypt}
+\begin{verbatim}
+>>-APR_CRYPT--(--expression--)---------------------------------><
+
+>>-APR_CRYPT--(--expression--,--hash--)------------------------><
+\end{verbatim}
+Unix crypt. The {\tt apr\_crypt} routine is compatible to the Apache function that is used in the {\tt htpasswd} utility.\\
+\\
+The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 120 bytes.\\
+\\
+The result of the function is CHAR(13). The result can be null; if the argument is null, the result is the null value.\\
+\\
+Examples:
+\begin{verbatim}
+1)
+    INSERT INTO USERS (username, password)
+       VALUES ('test', apr_crypt('testpwd'))
+
+2)
+    SELECT apr_crypt( 'testpwd' ) FROM SYSIBM.SYSDUMMY1
+
+    1
+    -------------
+    cqs7uOvz8KBlk
+
+      1 record(s) selected.
+
+3)
+    CALL apr_crypt('testpwd', ?)
+
+      Value of output parameters
+      --------------------------
+      Parameter Name  : HASH
+      Parameter Value : cqs7uOvz8KBlk
+
+      Return Status = 0
+\end{verbatim}
+\newpage
+\hypertarget{haprsha1}{}
+\subsection{apr\_sha1} \label{aprsha1}
+\begin{verbatim}
+>>-APR_SHA1--(--expression--)----------------------------------><
+
+>>-APR_SHA1--(--expression--,--hash--)-------------------------><
+\end{verbatim}
+SHA1 algorithm. The {\tt apr\_sha1} routine is compatible to the Apache function that is used in the {\tt htpasswd} utility.\\
+\\
+The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 120 bytes.\\
+\\
+The result of the function is CHAR(33). The result can be null; if the argument is null, the result is the null value.\\
+\\
+Examples:
+\begin{verbatim}
+1)
+    INSERT INTO USERS (username, password)
+       VALUES ('test', apr_sha1('testpwd'))
+
+2)
+    SELECT apr_sha1( 'testpwd' ) FROM SYSIBM.SYSDUMMY1
+
+    1
+    ---------------------------------
+    {SHA}mO8HWOaqxvmp4Rl1SMgZC3LJWB0=
+
+      1 record(s) selected.
+
+3)
+    CALL apr_sha1('testpwd', ?)
+
+      Value of output parameters
+      --------------------------
+      Parameter Name  : HASH
+      Parameter Value : {SHA}mO8HWOaqxvmp4Rl1SMgZC3LJWB0=
+
+      Return Status = 0
+\end{verbatim}
+\hypertarget{hvalidatepw}{}
+\subsection{validate\_pw} \label{validatepw}
+\begin{verbatim}
+>>-VALIDATE_PW--(--password--,--hash--)------------------------><
+
+>>-VALIDATE_PW--(--password--,--hash--,--is_valid--)-----------><
+\end{verbatim}
+This routine can be used to validate a password against a hash.\\
+\\
+The two input arguments can be character strings that are either a CHAR or VARCHAR not exceeding 120 bytes. The second parameter (hash) must not be 
+empty, otherwise an \mbox{{\tt SQLSTATE 39701}} is returned.\\
+\\
+The result of the routine is an INTEGER. If the password is valid, 1 is returned. If the password is not valid, 0 is returned. The result can be null; if the argument is null, the result is the null value.\\
+\\
+Examples:
+\begin{verbatim}
+1)
+    SELECT validate_pw('testpwd', 'cqs7uOvz8KBlk') FROM SYSIBM.SYSDUMMY1"
+
+    1          
+    -----------
+              1
+
+      1 record(s) selected.
+
+2)
+    CALL validate_pw('testpwd', 'cqs7uOvz8KBlk', ?)
+
+      Value of output parameters
+      --------------------------
+      Parameter Name  : IS_VALID
+      Parameter Value : 1
+
+      Return Status = 0
+
+3)
+    CALL validate_pw('testpwd', '0123456789abcdef', ?)
+
+      Value of output parameters
+      --------------------------
+      Parameter Name  : IS_VALID
+      Parameter Value : 0
+
+      Return Status = 0
+\end{verbatim}
