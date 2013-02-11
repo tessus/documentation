@@ -12,7 +12,7 @@
 \usepackage[
   bookmarks=true, 
   bookmarksnumbered=true, 
-  pdftitle={Documentation for db2-auth-routines}, 
+  pdftitle={Documentation for db2-hash-routines}, 
   pdfauthor={Helmut K. C. Tessarek}, 
   pdfcreator={$ $Id$ $}, 
   colorlinks=false, 
@@ -25,13 +25,13 @@
 \date{\today}
 \author{Helmut K. C. Tessarek}
 \title{Documentation for\\
-db2-auth-routines}
+db2-hash-routines}
 \begin{document}
 \maketitle
 \setcounter{page}{0}
 \thispagestyle{empty}
 \begin{abstract}
-db2-auth-routines is a package which provides \mbox{User Defined Functions} and \mbox{Stored Procedures} for IBM\textsuperscript{\textregistered}{} DB2\textsuperscript{\textregistered}{} to encrypt and verify \mbox{passwords}.
+db2-hash-routines is a package which provides \mbox{User Defined Functions} and \mbox{Stored Procedures} for IBM\textsuperscript{\textregistered}{} DB2\textsuperscript{\textregistered}{} to generate and validate \mbox{hashes}.
 \end{abstract}
 
 \vfill
@@ -50,7 +50,7 @@ db2-auth-routines is a package which provides \mbox{User Defined Functions} and 
 \newpage
 \pagestyle{fancy}
 \lhead{}
-\chead{Documentation for db2-auth-routines}
+\chead{Documentation for db2-hash-routines}
 \rhead{}
 \rfoot{{\tiny \rm $ $Revision$ $}}
 \cfoot{\thepage\ / \pageref*{LastPage}}
@@ -60,7 +60,7 @@ db2-auth-routines is a package which provides \mbox{User Defined Functions} and 
 \renewcommand{\thepage}{\arabic{page}}
 \setcounter{page}{1}
 
-% Include section: db2-auth-routines
+% Include section: db2-hash-routines
 \input{routines}
 \newpage
 
