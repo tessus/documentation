@@ -26,7 +26,7 @@
 \author{Helmut K. C. Tessarek}
 \title{Documentation for\\
 mod\_auth(nz)\_ibmdb2\\
-db2-auth-routines\\
+db2-hash-routines\\
 scripts}
 \begin{document}
 \maketitle
@@ -356,6 +356,10 @@ You can browse the CVS repository via the web at\\
 \input{faq}
 \newpage
 
+% Include section: Links
+\input{links}
+\newpage
+
 \begin{appendix}
 \section{directives and default values} \label{default}
 \vspace{5ex}
@@ -394,7 +398,7 @@ directive & & default value \\
 
 \hypertarget{hsps}{}
 \section{Stored Procedure Support} \label{sp}
-Stored procedures can minimize the network traffic and regarding the authentication module they can ease the administration. The module supports two types of stored procedures: one for user authentication and one for group authentication.\\
+Stored procedures can minimize the network traffic and with regard to the authentication module configuration they can ease the administration. The module supports two types of stored procedures: one for user authentication and one for group authentication.\\
 \\
 For the following 2 sections we use these 3 tables:
 \\
