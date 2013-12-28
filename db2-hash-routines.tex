@@ -1,4 +1,3 @@
-% $Id$
 %\documentclass[11pt,a4paper]{scrartcl}
 %\documentclass[11pt,a4paper]{article}
 \documentclass[11pt,letterpaper]{article}
@@ -9,12 +8,14 @@
 \newcommand{\stt}[1]{\tt \small #1}
 \usepackage{lastpage}
 \usepackage{fancyhdr}
+\usepackage[nodayofweek]{datetime}
+\input{db2-hash-routines_info}
 \usepackage[
   bookmarks=true, 
   bookmarksnumbered=true, 
   pdftitle={Documentation for db2-hash-routines}, 
   pdfauthor={Helmut K. C. Tessarek}, 
-  pdfcreator={$ $Id$ $}, 
+  pdfcreator={\CommitHash{}}, 
   colorlinks=false, 
   linkcolor={blue}, 
   citecolor={blue}, 
@@ -22,11 +23,13 @@
   breaklinks=true, 
   pdftex
 ]{hyperref}
-\date{\today}
+%\date{\today}
 \author{Helmut K. C. Tessarek}
 \title{Documentation for\\
 db2-hash-routines}
 \begin{document}
+\date{\longdate{\formatdate{\CommitD{}}{\CommitM{}}{\CommitY{}}}}
+%\date{\usdate{\formatdate{\CommitD{}}{\CommitM{}}{\CommitY{}}}}
 \maketitle
 \setcounter{page}{0}
 \thispagestyle{empty}
@@ -39,9 +42,8 @@ db2-hash-routines is a package which provides \mbox{User Defined Functions} and 
 \begin{center}
 \href{http://mod-auth-ibmdb2.sourceforge.net}{http://mod-auth-ibmdb2.sourceforge.net}\\
 
-{\tiny \rm $ $RCSfile$ $ }
-{\tiny \rm $ $Date$ $ }
-{\tiny \rm $ $Revision$ $ }
+{\tiny \rm \CommitDate{} }
+{\tiny \rm \CommitHashAbbrev{} }
 
 \end{center}
 \newpage
@@ -52,9 +54,9 @@ db2-hash-routines is a package which provides \mbox{User Defined Functions} and 
 \lhead{}
 \chead{Documentation for db2-hash-routines}
 \rhead{}
-\rfoot{{\tiny \rm $ $Revision$ $}}
+\rfoot{{\tiny \rm \CommitHashAbbrev{}}}
 \cfoot{\thepage\ / \pageref*{LastPage}}
-\lfoot{{\tiny \rm $ $Date$ $}}
+\lfoot{{\tiny \rm \CommitDate{}}}
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0.4pt}
 \renewcommand{\thepage}{\arabic{page}}
@@ -73,9 +75,7 @@ db2-hash-routines is a package which provides \mbox{User Defined Functions} and 
 
 \begin{center}
 \vspace{\fill}\ \newline
-{\tiny \rm $ $RCSfile$ $ }
-{\tiny \rm $ $Date$ $ }
-{\tiny \rm $ $Revision$ $ }
+{\tiny \rm \CommitHash{} }
 \end{center}
 
 \end{document}
