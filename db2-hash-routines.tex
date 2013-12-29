@@ -5,7 +5,6 @@
 \usepackage{array}
 \usepackage{verbatim}
 \newenvironment{sverbatim}{\begingroup\small\verbatim}{\endverbatim\endgroup}
-\newcommand{\stt}[1]{\tt \small #1}
 \usepackage{lastpage}
 \usepackage{fancyhdr}
 \usepackage[nodayofweek]{datetime}
@@ -23,11 +22,18 @@
   breaklinks=true, 
   pdftex
 ]{hyperref}
-%\date{\today}
+
+\newcommand{\stt}[1]{\tt \small #1}
+\newcommand{\showtext}[2]{
+\ifdata
+#1#2
+\fi
+}
+
+\begin{document}
 \author{Helmut K. C. Tessarek}
 \title{Documentation for\\
 db2-hash-routines}
-\begin{document}
 \date{\longdate{\formatdate{\CommitD{}}{\CommitM{}}{\CommitY{}}}}
 %\date{\usdate{\formatdate{\CommitD{}}{\CommitM{}}{\CommitY{}}}}
 \maketitle
@@ -42,8 +48,10 @@ db2-hash-routines is a package which provides \mbox{User Defined Functions} and 
 \begin{center}
 \href{http://mod-auth-ibmdb2.sourceforge.net}{http://mod-auth-ibmdb2.sourceforge.net}\\
 
-{\tiny \rm \CommitDate{} }
-{\tiny \rm \CommitHashAbbrev{} }
+%\ifdata
+{\tiny \rm \showtext{Date: }\CommitDateTimeTz{} }
+{\tiny \rm \showtext{Id: }\CommitHashAbbrev{} }
+%\fi
 
 \end{center}
 \newpage
@@ -54,9 +62,9 @@ db2-hash-routines is a package which provides \mbox{User Defined Functions} and 
 \lhead{}
 \chead{Documentation for db2-hash-routines}
 \rhead{}
-\rfoot{{\tiny \rm \CommitHashAbbrev{}}}
+\lfoot{{\tiny \rm \showtext{Date: }\CommitDate{}}}
 \cfoot{\thepage\ / \pageref*{LastPage}}
-\lfoot{{\tiny \rm \CommitDate{}}}
+\rfoot{{\tiny \rm \showtext{Id: }\CommitHashAbbrev{}}}
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0.4pt}
 \renewcommand{\thepage}{\arabic{page}}
@@ -75,7 +83,8 @@ db2-hash-routines is a package which provides \mbox{User Defined Functions} and 
 
 \begin{center}
 \vspace{\fill}\ \newline
-{\tiny \rm \CommitHash{} }
+{\tiny \rm \showtext{Date: }\CommitDateTimeTz{} }
+{\tiny \rm \showtext{Id: }\CommitHash{} }
 \end{center}
 
 \end{document}
