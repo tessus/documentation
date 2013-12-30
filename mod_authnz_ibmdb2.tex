@@ -8,7 +8,7 @@
 \usepackage{lastpage}
 \usepackage{fancyhdr}
 \usepackage[nodayofweek]{datetime}
-\input{dmod_authnz_ibmdb2_info}
+\input{mod_authnz_ibmdb2_info}
 \usepackage[
   bookmarks=true, 
   bookmarksnumbered=true, 
@@ -347,16 +347,20 @@ If you want to use \hyperlink{hsps}{stored procedures} and caching, the directiv
 \input{scripts}
 \newpage
 
-\section{CVS access}
-The mod\_auth(nz)\_ibmdb2 CVS repository can be checked out through anonymous (pserver) CVS with the following instruction set. When prompted for a password for anonymous, simply press the Enter key.
+\section{GIT access}
+The git repositories can be cloned from github with the following instruction set:
 \begin{verbatim}
-cvs -d:pserver:anonymous@evermeet.cx:/cvs login
-cvs -z3 -d:pserver:anonymous@evermeet.cx:/cvs co mod_auth_ibmdb2/module
+git clone git://github.com/tessus/mod_authnz_ibmdb2.git
+git clone git://github.com/tessus/mod_auth_ibmdb2.git
+git clone git://github.com/tessus/db2-hash-routines.git
 \end{verbatim}
-where {\tt module} is either {\tt mod\_authnz\_ibmdb2} or {\tt mod\_auth\_ibmdb2}.\\
+You can also browse the repositories via the web:\\
 \\
-You can browse the CVS repository via the web at\\
-\url{http://www.evermeet.cx/cvs/mod_auth_ibmdb2}
+\begin{tabular}{@{} lr @{}}
+mod\_authnz\_ibmdb2 & \url{https://github.com/tessus/mod_authnz_ibmdb2}\\ [0.5ex]
+mod\_auth\_ibmdb2 & \url{https://github.com/tessus/mod_auth_ibmdb2}\\ [0.5ex]
+db2-hash-routines & \url{https://github.com/tessus/db2-hash-routines}\\ [0.5ex]
+\end{tabular}
 \newpage
 
 % Include section: FAQ
