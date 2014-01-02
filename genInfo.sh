@@ -12,10 +12,10 @@ COMMIT_HASH=`git log -1 --pretty=%H ${TEX}`
 if [ "$?" == "0" ]
 then
 	COMMIT_HASH_ABBREV=`git log -1 --pretty=%h ${TEX}`
-	COMMIT_DATETIMETZ=`git log -1 --pretty=%ci ${TEX}`
-	COMMIT_DATE=`git log -1 --pretty=%ci ${TEX} |cut -c1-10`
-	COMMIT_TIME=`git log -1 --pretty=%ci ${TEX} |cut -c12-19`
-	COMMIT_TZ=`git log -1 --pretty=%ci ${TEX} |cut -c21-25`
+	COMMIT_DATETIMETZ=`git log -1 --pretty=%ai ${TEX}`
+	COMMIT_DATE=`git log -1 --pretty=%ai ${TEX} |cut -c1-10`
+	COMMIT_TIME=`git log -1 --pretty=%ai ${TEX} |cut -c12-19`
+	COMMIT_TZ=`git log -1 --pretty=%ai ${TEX} |cut -c21-25`
 	COMMIT_DATETIME="${COMMIT_DATE} ${COMMIT_TIME}"
 	CY=`echo ${COMMIT_DATE} |cut -c1-4`
 	CM=`echo ${COMMIT_DATE} |cut -c6-7`
