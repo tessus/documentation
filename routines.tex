@@ -27,13 +27,13 @@ db2 -tvf register.ddl
 \subsection{Description of the UDFs and SPs}
 This library delivers five routines\footnote{see Appendix \ref{rtnreference} for a reference of the UDFs and SPs}:\\
 \\
-\hyperlink{hmd5}{\tt md5}\\
+\hyperlink{hphpmd5}{\tt php\_md5}\\
 \hyperlink{haprmd5}{\tt apr\_md5}\\
 \hyperlink{haprcrypt}{\tt apr\_crypt}\\
 \hyperlink{haprsha1}{\tt apr\_sha1}\\
 \hyperlink{hvalidatepw}{\tt validate\_pw}\\
 \\
-The {\tt md5} routine is compatible to the PHP md5 function.\\
+The {\tt php\_md5} routine is compatible to the PHP md5 function.\\
 The {\tt apr\_md5}, {\tt apr\_crypt} and {\tt apr\_sha1} routines are compatible to the Apache functions that are used in the {\tt htpasswd} utility.\\
 \\
 {\tt validate\_pw} can be used to validate a password against a hash.

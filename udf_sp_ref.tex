@@ -1,12 +1,12 @@
 \section{UDF and SP reference} \label{rtnreference}
-\hypertarget{hmd5}{}
-\subsection{md5} \label{md5}
+\hypertarget{hphpmd5}{}
+\subsection{php\_md5} \label{phpmd5}
 \begin{verbatim}
->>-MD5--(--expression--)---------------------------------------><
+>>-PHP_MD5--(--expression--)-----------------------------------><
 
->>-MD5--(--expression--,--hash--)------------------------------><
+>>-PHP_MD5--(--expression--,--hash--)--------------------------><
 \end{verbatim}
-MD5 hash. The {\tt md5} routine is compatible to the PHP md5 function.\\
+MD5 hash. The {\tt php\_md5} routine is compatible to the PHP md5 function.\\
 \\
 The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 120 bytes.\\
 \\
@@ -16,10 +16,10 @@ Examples:
 \begin{verbatim}
 1)
     INSERT INTO USERS (username, password)
-       VALUES ('test', md5('testpwd'))
+       VALUES ('test', php_md5('testpwd'))
 
 2)
-    SELECT md5( 'testpwd' ) FROM SYSIBM.SYSDUMMY1
+    SELECT php_md5( 'testpwd' ) FROM SYSIBM.SYSDUMMY1
 
     1
     --------------------------------
@@ -28,7 +28,7 @@ Examples:
       1 record(s) selected.
 
 3)
-    CALL md5('testpwd', ?)
+    CALL php_md5('testpwd', ?)
 
       Value of output parameters
       --------------------------
