@@ -2,7 +2,12 @@
 
 IN=$1
 F=${IN%.*}
-TEX=${F}.tex
+if [ "$F" == "db2-hash-routines" ]
+then
+	TEX=`for i in routines.tex db2-hash-routines.tex udf_sp_ref.tex ; do echo "$(git log -1 --pretty="%at" $i) $i"; done |sort |tail -1 |cut -c12-`
+else
+	TEX=${F}.tex
+fi
 OUT=${F}_info.tex
 
 echo "\newif\ifdata" >${OUT}
@@ -20,12 +25,12 @@ then
 	CY=`echo ${COMMIT_DATE} |cut -c1-4`
 	CM=`echo ${COMMIT_DATE} |cut -c6-7`
 	CD=`echo ${COMMIT_DATE} |cut -c9-10`
-		
+
 	echo "\datatrue" >>${OUT}
 	echo "\newcommand{\CommitHash}{${COMMIT_HASH}}" >>${OUT}
 	echo "\newcommand{\CommitHashAbbrev}{${COMMIT_HASH_ABBREV}}" >>${OUT}
 	echo "\newcommand{\CommitDateTimeTz}{${COMMIT_DATETIMETZ}}" >>${OUT}
-	echo "\newcommand{\CommitDateTime}{${COMMIT_DATETIME}}" >>${OUT}	
+	echo "\newcommand{\CommitDateTime}{${COMMIT_DATETIME}}" >>${OUT}
 	echo "\newcommand{\CommitDate}{${COMMIT_DATE}}" >>${OUT}
 	echo "\newcommand{\CommitTime}{${COMMIT_TIME}}" >>${OUT}
 	echo "\newcommand{\CommitTz}{${COMMIT_TZ}}" >>${OUT}
@@ -44,4 +49,4 @@ else
 	echo "\newcommand{\CommitY}{}" >>${OUT}
 	echo "\newcommand{\CommitM}{}" >>${OUT}
 	echo "\newcommand{\CommitD}{}" >>${OUT}
-fi	
+fi
