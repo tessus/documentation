@@ -154,6 +154,46 @@ Examples:
 
       Return Status = 0
 \end{verbatim}
+\newpage
+\hypertarget{haprsha256}{}
+\subsection{apr\_sha256} \label{aprsha256}
+\begin{verbatim}
+>>-APR_SHA256--(--expression--)--------------------------------><
+
+>>-APR_SHA256--(--expression--,--hash--)-----------------------><
+\end{verbatim}
+SHA256 algorithm. The {\tt apr\_sha256} routine returns the identifier {\tt \{SHA256\}} plus the base64 encoded sha256 hash.\\
+\\
+The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 120 bytes.\\
+\\
+The result of the function is CHAR(52). The result can be null; if the argument is null, the result is the null value.\\
+\\
+Examples:
+\begin{verbatim}
+1)
+    INSERT INTO USERS (username, password)
+       VALUES ('test', apr_sha256('testpwd'))
+
+2)
+    SELECT apr_sha256( 'testpwd' ) FROM SYSIBM.SYSDUMMY1
+
+    1
+    ----------------------------------------------------
+    {SHA256}qFtqIIE8Maixs/NhjaeWJxyaopOz+AmHMFOyGuxQEIc=
+
+      1 record(s) selected.
+
+3)
+    CALL apr_sha256('testpwd', ?)
+
+      Value of output parameters
+      --------------------------
+      Parameter Name  : HASH
+      Parameter Value : {SHA256}qFtqIIE8Maixs/NhjaeWJxyaopOz+AmHMFOyGuxQEIc=
+
+      Return Status = 0
+\end{verbatim}
+\newpage
 \hypertarget{hvalidatepw}{}
 \subsection{validate\_pw} \label{validatepw}
 \begin{verbatim}

@@ -31,10 +31,12 @@ This library delivers five routines\footnote{see Appendix \ref{rtnreference} for
 \hyperlink{haprmd5}{\tt apr\_md5}\\
 \hyperlink{haprcrypt}{\tt apr\_crypt}\\
 \hyperlink{haprsha1}{\tt apr\_sha1}\\
+\hyperlink{haprsha256}{\tt apr\_sha256}\\
 \hyperlink{hvalidatepw}{\tt validate\_pw}\\
 \\
 The {\tt php\_md5} routine is compatible to the PHP md5 function.\\
 The {\tt apr\_md5}, {\tt apr\_crypt} and {\tt apr\_sha1} routines are compatible to the Apache functions that are used in the {\tt htpasswd} utility.\\
+The {\tt apr\_sha256} routine returns the identifier {\tt \{SHA256\}} plus the base64 encoded sha256 hash.\\
 \\
 {\tt validate\_pw} can be used to validate a password against a hash.
 \paragraph{Note:}{In win32 environments {\tt apr\_crypt} returns the output of {\tt apr\_md5}.}
