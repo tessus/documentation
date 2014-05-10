@@ -12,7 +12,7 @@
 \usepackage[
   bookmarks=true, 
   bookmarksnumbered=true, 
-  pdftitle={Documentation for mod auth(nz) ibmdb2}, 
+  pdftitle={Documentation for mod authnz ibmdb2}, 
   pdfauthor={Helmut K. C. Tessarek}, 
   pdfcreator={\CommitHash{}}, 
   colorlinks=false, 
@@ -33,7 +33,7 @@
 \begin{document}
 \author{Helmut K. C. Tessarek}
 \title{Documentation for\\
-mod\_auth(nz)\_ibmdb2\\
+mod\_authnz\_ibmdb2\\
 db2-hash-routines\\
 scripts}
 \date{\longdate{\formatdate{\CommitD{}}{\CommitM{}}{\CommitY{}}}}
@@ -41,7 +41,7 @@ scripts}
 \setcounter{page}{0}
 \thispagestyle{empty}
 \begin{abstract}
-mod\_auth(nz)\_ibmdb2 is an Apache authentication module using IBM\textsuperscript{\textregistered}{} DB2\textsuperscript{\textregistered}{} as the backend database for storing user and group information. The module supports several encryption methods.
+mod\_authnz\_ibmdb2 is an Apache authentication module using IBM\textsuperscript{\textregistered}{} DB2\textsuperscript{\textregistered}{} as the backend database for storing user and group information. The module supports several encryption methods.
 \end{abstract}
 
 \vfill
@@ -59,7 +59,7 @@ mod\_auth(nz)\_ibmdb2 is an Apache authentication module using IBM\textsuperscri
 \newpage
 \pagestyle{fancy}
 \lhead{}
-\chead{Documentation for mod\_auth(nz)\_ibmdb2}
+\chead{Documentation for mod\_authnz\_ibmdb2}
 \rhead{}
 \lfoot{{\tiny \rm \showtext{Date: }\CommitDate{}}}
 \cfoot{\thepage\ / \pageref*{LastPage}}
@@ -68,9 +68,9 @@ mod\_auth(nz)\_ibmdb2 is an Apache authentication module using IBM\textsuperscri
 \renewcommand{\footrulewidth}{0.4pt}
 \renewcommand{\thepage}{\arabic{page}}
 \setcounter{page}{1}
-\section{mod\_auth(nz)\_ibmdb2}
+\section{mod\_authnz\_ibmdb2}
 
-\subsection{Building mod\_auth(nz)\_ibmdb2}
+\subsection{Building mod\_authnz\_ibmdb2}
 Log in as root user.\\
 \\
 Change the {\tt DB2PATH} and the {\tt APXS} variables in the {\tt makemod} script according to your environment:
@@ -86,105 +86,49 @@ Set {\tt APXS} to the path that points to your apxs binary. The apxs binary is u
 \\
 After changing the above settings, run the script {\tt ./makemod}\\
 \\
-Last but not least the DB2 environment has to be set in the Apache startscript. This is done by sourcing the {\tt db2profile} script, which is located in {\tt DB2PATH}.\\
-
-\subsection{Details on building mod\_auth(nz)\_ibmdb2}
+Last but not least the DB2 environment has to be set in the Apache startscript. This is done by sourcing the {\tt db2profile} script, which is located in {\tt DB2PATH}.
+\subsection{Details on building mod\_authnz\_ibmdb2}
 To build the module the Apache utility {\tt apxs} is used. The {\tt EXTRA\_LFLAG} needs to be specified so that the module will find the db2 library during runtime.
 \begin{verbatim}
 DB2PATH=/home/db2inst1/sqllib
 
 EXTRA_LFLAG="-Wl,-G,-blibpath:$DB2PATH/lib"     (for AIX)
 EXTRA_LFLAG="-Wl,-rpath,$DB2PATH/lib"           (for Linux)
-\end{verbatim}
-\underline{mod\_authnz\_ibmdb2:}
-\begin{verbatim}
+
 apxs -c -ldb2 $EXTRA_LFLAG mod_authnz_ibmdb2.c
-\end{verbatim}
-\underline{mod\_auth\_ibmdb2:}
-\begin{verbatim}
-apxs -c -ldb2 $EXTRA_LFLAG mod_auth_ibmdb2.c
-\end{verbatim}
-\underline{mod\_auth\_ibmdb2 (Apache 1.x):}
-\begin{verbatim}
-apxs -c -ldb2 -lcrypt -lgdbm $EXTRA_LFLAG mod_auth_ibmdb2.c
 \end{verbatim}
 If the {\tt sqlcli1.h} header file cannot be found, add the {\tt -I} option to specify the
 directory where {\tt sqlcli1.h} can be found.
 If the db2 library cannot be found, add the {\tt -L} option to specify the
 directory where {\tt libdb2.so} can be found.\\
-\\
+
 For example:
 \begin{verbatim}
 apxs -c -L/home/db2inst1/sqllib/lib        \
   -I/home/db2inst1/sqllib/include -ldb2    \
   $EXTRA_LFLAG mod_authnz_ibmdb2.c
 \end{verbatim}
-After creating the module, it has to be moved to the Apache module directory. This is also done with the apxs utility:\\
-\\
-\underline{mod\_authnz\_ibmdb2:}
+After creating the module, it has to be moved to the Apache module directory. This is also done with the apxs utility:
+
 \begin{verbatim}
 apxs -i mod_authnz_ibmdb2.la
 \end{verbatim}
-\underline{mod\_auth\_ibmdb2:}
-\begin{verbatim}
-apxs -i mod_auth_ibmdb2.la
-\end{verbatim}
-\underline{mod\_auth\_ibmdb2 (Apache 1.x):}
-\begin{verbatim}
-apxs -i mod_auth_ibmdb2.so
-\end{verbatim}
 As the next step the DB2 environment has to be set in the Apache startscript. This is done by sourcing the {\tt db2profile} script, which is located in {\tt DB2PATH}.\\
 \\
-Finally, add the following directive to your httpd.conf and restart Apache:\\
-\\
-\underline{mod\_authnz\_ibmdb2:}
+Finally, add the following directive to your httpd.conf and restart Apache:
+
 \begin{verbatim}
 LoadModule authnz_ibmdb2_module modules/mod_authnz_ibmdb2.so
 \end{verbatim}
-\underline{mod\_auth\_ibmdb2:}
-\begin{verbatim}
-LoadModule ibmdb2_auth_module   modules/mod_auth_ibmdb2.so
-\end{verbatim}
-\underline{mod\_auth\_ibmdb2 (Apache 1.x):}
-\begin{verbatim}
-LoadModule ibmdb2_auth_module   modules/mod_auth_ibmdb2.so
-AddModule  mod_auth_ibmdb2.c
-\end{verbatim}
-
-\subsection{Building a static module (Apache 1.3.x)}
-Extract the Apache source code to a directory (e.g. {\tt /ext}). Change into the {\tt modules} directory of the Apache source tree:
-\begin{verbatim}
-cd /ext/apache_X.Y.ZZ/src/modules
-\end{verbatim}
-Extract mod\_auth\_ibmdb2-x.y.z.tar.gz into the {\tt modules} directory. Change into the {\tt mod\_auth\_ibmdb2} directory and copy the two files from the {\tt static} directory into the current one:
-\begin{verbatim}
-cd mod_auth_ibmdb2
-cp static/.indent.pro .
-cp static/Makefile.tmpl .
-\end{verbatim}
-Change into the {\tt src} directory:
-\begin{verbatim}
-cd ../..
-\end{verbatim}
-Add the following line to the {\tt Configuration} file and to the {\tt Configuration.tmpl} file:
-\begin{verbatim}
-AddModule modules/mod_auth_ibmdb2/mod_auth_ibmdb2.o
-\end{verbatim}
-Source the db2profile:
-\begin{verbatim}
-. /home/db2inst1/sqllib/db2profile
-\end{verbatim}
-Make the server by running {\tt make} in the {\tt src} directory. If you run {\tt httpd -l} after the executable has been built, you shoud see {\tt mod\_auth\_ibmdb2.c} in the list of compiled in modules.
 
 \subsection{Installing the Manpages}
-There is a {\tt man} directory in the path, where you have extracted the mod\_auth\_ibmdb2 package.\\ 
+There is a {\tt man} directory in the path, where you have extracted the mod\_authnz\_ibmdb2 package.\\ 
 \\
 Change into the man directory and run the script {\tt ./maninstall} 
 \newpage
 
 \subsection{Description of the module}
-\emph{mod\_auth\_ibmdb2} is an Apache authentication module using IBM DB2 as the backend database for storing user and group information. The module is designed for Apache 2.0.x and 1.x and supports several encryption methods.\\
-\emph{mod\_authnz\_ibmdb2} is designed for Apache 2.2.x and later and is based on the new authentication/authorization framework.\\
+\emph{mod\_authnz\_ibmdb2} is an Apache authentication module using IBM DB2 as the backend database for storing user and group information. The module is designed for Apache 2.2.x and later and is based on the new authentication/authorization framework.\\
 \\
 Here is a list of the new directives\footnote{see Appendix \ref{default}} that come with the module:\\
 \\
@@ -234,7 +178,7 @@ Here is a list of the new directives\footnote{see Appendix \ref{default}} that c
 
 {\tt AuthIBMDB2CacheLifetime} & & cache lifetime in seconds \mbox{(default: {\tt 300})} \\
 \end{tabular}
-\footnotetext[2]{SP support is not available in mod\_auth\_ibmdb2 for Apache 1.x, see Appendix \ref{sp}}
+\footnotetext[2]{see Appendix \ref{sp}}
 \addtocounter{footnote}{1}
 \normalsize
 
@@ -258,7 +202,7 @@ If {\tt AuthIBMDB2UserProc} is set, the named \hyperlink{husersp}{stored procedu
 \begin{verbatim}
 CREATE PROCEDURE user_procedure_name ( IN VARCHAR, OUT VARCHAR )
 \end{verbatim}
-If {\tt AuthIBMDB2GroupProc} is set, the named \hyperlink{hgroupsp}{stored procedure}\footnote{see Appendix \ref{groupsp}} is responsible for returning the groups the user in question belongs to. It must return an open cursor to the resultset. If set,\\ {\tt AuthIBMDB2GroupTable}, {\tt AuthIBMDB2NameField}, {\tt AuthIBMDB2GroupField}, {\tt AuthIBMDB2GroupCondition} are ignored. The stored procedure must have the following parameter format:
+If {\tt AuthIBMDB2GroupProc} is set, the named \hyperlink{hgroupsp}{stored procedure}\footnote{see Appendix \ref{groupsp}} is responsible for returning the groups the user in question belongs to. It must return an open cursor to the result set. If set,\\ {\tt AuthIBMDB2GroupTable}, {\tt AuthIBMDB2NameField}, {\tt AuthIBMDB2GroupField}, {\tt AuthIBMDB2GroupCondition} are ignored. The stored procedure must have the following parameter format:
 \begin{verbatim}
 CREATE PROCEDURE group_procedure_name ( IN VARCHAR )
 \end{verbatim}
@@ -284,10 +228,10 @@ ALTER TABLE WEB.GROUPS
     ADD PRIMARY KEY (USERNAME, GROUPNAME);
 \end{verbatim}
 Then you will have to insert records into the two tables:
-\marginpar{\footnotesize \flushleft {\tt apr\_md5} is a User Defined Function that is explained in the db2-auth-udfs part of this documentation.}
+\marginpar{\footnotesize \flushleft {\tt bcrypt} is a User Defined Function that is explained in the \mbox{db2-hash-routines} part of this documentation.}
 \begin{verbatim}
 INSERT INTO WEB.USERS (username, password)
-    VALUES ('test', apr_md5('testpwd'));
+    VALUES ('test', bcrypt('testpwd'));
 INSERT INTO WEB.GROUPS (username, groupname) 
     VALUES ('test', 'admin');
 \end{verbatim}
@@ -296,7 +240,7 @@ Then add the following lines to your httpd.conf:
 <Directory "/var/www/my_test_dir">
     AuthName                    "DB2 Authentication"
     AuthType                    Basic
-    AuthBasicProvider           ibmdb2    # Apache 2.2.x only
+    AuthBasicProvider           ibmdb2
 
     AuthIBMDB2User              db2inst1
     AuthIBMDB2Password          ibmdb2
@@ -322,7 +266,7 @@ If you want to use \hyperlink{hsps}{stored procedures} and caching, the directiv
 <Directory "/var/www/my_test_dir">
     AuthName                     "DB2 Authentication"
     AuthType                     Basic
-    AuthBasicProvider            ibmdb2    # Apache 2.2.x only
+    AuthBasicProvider            ibmdb2
 
     AuthIBMDB2User               db2inst1
     AuthIBMDB2Password           ibmdb2
@@ -339,7 +283,7 @@ If you want to use \hyperlink{hsps}{stored procedures} and caching, the directiv
 \end{verbatim}
 \newpage
 
-% Include section: db2-auth-routines
+% Include section: db2-hash-routines
 \input{routines}
 \newpage
 
@@ -350,9 +294,9 @@ If you want to use \hyperlink{hsps}{stored procedures} and caching, the directiv
 \section{GIT access}
 The git repositories can be cloned from github with the following instruction set:
 \begin{verbatim}
-git clone git://github.com/tessus/mod_authnz_ibmdb2.git
-git clone git://github.com/tessus/mod_auth_ibmdb2.git
-git clone git://github.com/tessus/db2-hash-routines.git
+git clone https://github.com/tessus/mod_authnz_ibmdb2.git
+git clone https://github.com/tessus/mod_auth_ibmdb2.git
+git clone https://github.com/tessus/db2-hash-routines.git
 \end{verbatim}
 You can also browse the repositories via the web:\\
 \\
@@ -469,7 +413,7 @@ END@
 \newpage
 \hypertarget{hgroupsp}{}
 \subsection{group authentication} \label{groupsp}
-The stored procedure for group authentication is responsible for returning the groups the user in question belongs to. It must return an open cursor to the resultset.\\
+The stored procedure for group authentication is responsible for returning the groups the user in question belongs to. It must return an open cursor to the result set.\\
 \\
 The stored procedure must have the following parameter format:
 \begin{verbatim}
