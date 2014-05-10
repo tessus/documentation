@@ -1,4 +1,43 @@
 \section{UDF and SP reference} \label{rtnreference}
+\hypertarget{hbcrypt}{}
+\subsection{bcrypt} \label{bcrypt1}
+\begin{verbatim}
+>>-BCRYPT--(--expression--)------------------------------------><
+
+>>-BCRYPT--(--expression--,--hash--)---------------------------><
+\end{verbatim}
+bcrypt algorithm. The {\tt bcrypt} routine is compatible to the function used in Apache's {\tt htpasswd} utility.\\
+\\
+The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 120 bytes.\\
+\\
+The result of the function is CHAR(60). The result can be null; if the argument is null, the result is the null value.\\
+\\
+Examples:
+\begin{verbatim}
+1)
+    INSERT INTO USERS (username, password)
+       VALUES ('test', bcrypt('testpwd'))
+
+2)
+    SELECT bcrypt( 'testpwd' ) FROM SYSIBM.SYSDUMMY1
+
+    1
+    ------------------------------------------------------------
+    $2y$05$2jb66aPElSkNLT1t8e6dQepuCY2BP3JnYUh0xeV9r1PEoOGyOLkym
+
+      1 record(s) selected.
+
+3)
+    CALL bcrypt('testpwd', ?)
+
+      Value of output parameters
+      --------------------------
+      Parameter Name  : HASH
+      Parameter Value : $2y$05$WYSu1X6PVA0Ra.aPSjrdv.S6hOp.AYSnNRT521rmLRjD4Mj9UY6ve
+
+      Return Status = 0
+\end{verbatim}
+\newpage
 \hypertarget{hphpmd5}{}
 \subsection{php\_md5} \label{phpmd5}
 \begin{verbatim}
@@ -45,7 +84,7 @@ Examples:
 
 >>-APR_MD5--(--expression--,--hash--)--------------------------><
 \end{verbatim}
-Seeded MD5 hash. The {\tt apr\_md5} routine is compatible to the Apache function that is used in the {\tt htpasswd} utility.\\
+Seeded MD5 hash. The {\tt apr\_md5} routine is compatible to the function used in Apache's {\tt htpasswd} utility.\\
 \\
 The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 120 bytes.\\
 \\
@@ -62,7 +101,7 @@ Examples:
 
     1
     -------------------------------------
-    $apr1$HsTNH...$bmlPUSoPOF/Qhznl.sAq6/
+    $apr1$GfVmOTyJ$n7F1Vkwl/kX8MLgTJq1lp1
 
       1 record(s) selected.
 
@@ -72,7 +111,7 @@ Examples:
       Value of output parameters
       --------------------------
       Parameter Name  : HASH
-      Parameter Value : $apr1$HsTNH...$bmlPUSoPOF/Qhznl.sAq6/
+      Parameter Value : $apr1$GfVmOTyJ$n7F1Vkwl/kX8MLgTJq1lp1
 
       Return Status = 0
 \end{verbatim}
@@ -84,7 +123,7 @@ Examples:
 
 >>-APR_CRYPT--(--expression--,--hash--)------------------------><
 \end{verbatim}
-Unix crypt. The {\tt apr\_crypt} routine is compatible to the Apache function that is used in the {\tt htpasswd} utility.\\
+Unix crypt. The {\tt apr\_crypt} routine is compatible to the function used in Apache's {\tt htpasswd} utility.\\
 \\
 The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 120 bytes.\\
 \\
@@ -123,7 +162,7 @@ Examples:
 
 >>-APR_SHA1--(--expression--,--hash--)-------------------------><
 \end{verbatim}
-SHA1 algorithm. The {\tt apr\_sha1} routine is compatible to the Apache function that is used in the {\tt htpasswd} utility.\\
+SHA1 algorithm. The {\tt apr\_sha1} routine is compatible to the function used in Apache's {\tt htpasswd} utility.\\
 \\
 The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 120 bytes.\\
 \\
