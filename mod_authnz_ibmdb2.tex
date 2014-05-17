@@ -10,17 +10,16 @@
 \usepackage[nodayofweek]{datetime}
 \input{mod_authnz_ibmdb2_info}
 \usepackage[
-  bookmarks=true, 
-  bookmarksnumbered=true, 
-  pdftitle={Documentation for mod authnz ibmdb2}, 
-  pdfauthor={Helmut K. C. Tessarek}, 
-  pdfcreator={\CommitHash{}}, 
-  colorlinks=false, 
-  linkcolor={blue}, 
-  citecolor={blue}, 
-  backref=true, 
-  breaklinks=true, 
-  pdftex
+  bookmarks=true,
+  bookmarksnumbered=true,
+  pdftitle={Documentation for mod authnz ibmdb2},
+  pdfauthor={Helmut K. C. Tessarek},
+  pdfcreator={\CommitHash{}},
+  colorlinks=false,
+  linkcolor={blue},
+  citecolor={blue},
+  backref=true,
+  breaklinks=true
 ]{hyperref}
 
 \newcommand{\stt}[1]{\tt \small #1}
@@ -122,9 +121,9 @@ LoadModule authnz_ibmdb2_module modules/mod_authnz_ibmdb2.so
 \end{verbatim}
 
 \subsection{Installing the Manpages}
-There is a {\tt man} directory in the path, where you have extracted the mod\_authnz\_ibmdb2 package.\\ 
+There is a {\tt man} directory in the path, where you have extracted the mod\_authnz\_ibmdb2 package.\\
 \\
-Change into the man directory and run the script {\tt ./maninstall} 
+Change into the man directory and run the script {\tt ./maninstall}
 \newpage
 
 \subsection{Description of the module}
@@ -158,7 +157,7 @@ Here is a list of the new directives\footnote{see Appendix \ref{default}} that c
 
 {\tt AuthIBMDB2KeepAlive} & & connection kept open across requests \mbox{(default: {\tt yes})} \\
 
-{\tt AuthIBMDB2Authoritative} & & lookup is authoritative \mbox{(default: {\tt yes})} \\ 
+{\tt AuthIBMDB2Authoritative} & & lookup is authoritative \mbox{(default: {\tt yes})} \\
 
 {\tt AuthIBMDB2NoPasswd} & & just check, if user is in usertable \mbox{(default: {\tt no})} \\
 
@@ -186,7 +185,7 @@ Here is a list of the new directives\footnote{see Appendix \ref{default}} that c
 \noindent
 If {\tt AuthIBMDB2Authoritative} is {\tt Off}, then iff the user is not found in the database, let other authentication modules try to find the user. Default is {\tt On}. \\
 \\
-If {\tt AuthIBMDB2KeepAlive} is {\tt On}, then the server instance will keep the IBM DB2 server connection open.  In this case, the first time the connection is made, it will use the current set of Host, User, and Password settings.  Subsequent changes to these will not affect this server, so they should all be the same in every htaccess file. 
+If {\tt AuthIBMDB2KeepAlive} is {\tt On}, then the server instance will keep the IBM DB2 server connection open.  In this case, the first time the connection is made, it will use the current set of Host, User, and Password settings.  Subsequent changes to these will not affect this server, so they should all be the same in every htaccess file.
 If you need to access multiple IBM DB2 servers for this authorization scheme from the same web server, then keep this setting {\tt Off} -- this will open a new connection to the server every time it needs one.  The values of the database and various tables and fields are always used from the current {\tt .htaccess} file settings.\\
 \\
 If {\tt AuthIBMDB2NoPasswd} is {\tt On}, then any password the user enters will be accepted as long as the user exists in the database.\\ Setting this also overrides the setting for {\tt AuthIBMDB2PasswordField} to be the same as {\tt AuthIBMDB2NameField} (so that the SQL statements still work when there is no password at all in the database, and to remain backward-compatible with the default values for these fields.)\\
@@ -232,7 +231,7 @@ Then you will have to insert records into the two tables:
 \begin{verbatim}
 INSERT INTO WEB.USERS (username, password)
     VALUES ('test', bcrypt('testpwd'));
-INSERT INTO WEB.GROUPS (username, groupname) 
+INSERT INTO WEB.GROUPS (username, groupname)
     VALUES ('test', 'admin');
 \end{verbatim}
 Then add the following lines to your httpd.conf:
@@ -334,7 +333,7 @@ directive & & default value \\
 {\tt AuthIBMDB2PasswordField} & & {\tt password} \\[0.5ex]
 {\tt AuthIBMDB2CryptedPasswords} & & {\tt yes} \\[0.5ex]
 {\tt AuthIBMDB2KeepAlive} & & {\tt yes} \\[0.5ex]
-{\tt AuthIBMDB2Authoritative} & & {\tt yes} \\[0.5ex] 
+{\tt AuthIBMDB2Authoritative} & & {\tt yes} \\[0.5ex]
 {\tt AuthIBMDB2NoPasswd} & & {\tt no} \\[0.5ex]
 {\tt AuthIBMDB2UserCondition} & & -- \\[0.5ex]
 {\tt AuthIBMDB2GroupCondition} & & -- \\[0.5ex]
@@ -396,7 +395,7 @@ CREATE PROCEDURE user_sp
 (IN v_username VARCHAR(40), OUT v_password VARCHAR(40))
 LANGUAGE SQL
 BEGIN
-  SELECT password INTO v_password FROM web.users 
+  SELECT password INTO v_password FROM web.users
   WHERE username = v_username;
 END@
 \end{verbatim}
@@ -406,7 +405,7 @@ CREATE PROCEDURE user_sp
 (IN v_username VARCHAR(40), OUT v_password VARCHAR(40))
 LANGUAGE SQL
 BEGIN
-  SELECT username INTO v_password FROM web.users 
+  SELECT username INTO v_password FROM web.users
   WHERE username = v_username;
 END@
 \end{verbatim}
@@ -427,7 +426,7 @@ LANGUAGE SQL
 DYNAMIC RESULT SETS 1
 BEGIN
   DECLARE res CURSOR WITH RETURN FOR
-  SELECT m.groupname FROM web.groups g, web.mapping m 
+  SELECT m.groupname FROM web.groups g, web.mapping m
   WHERE m.groupname = g.groupname AND
         m.username = v_username AND
         g.active = 1;
