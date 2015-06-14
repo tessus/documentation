@@ -6,7 +6,7 @@ if [ "$F" == "db2-hash-routines" ]
 then
 	TEX=`for i in routines.tex db2-hash-routines.tex udf_sp_ref.tex ; do echo "$(git log -1 --pretty="%at" $i) $i"; done |sort |tail -1 |cut -c12-`
 else
-	TEX=${F}.tex
+	TEX=`for i in faq.tex links.tex mod_authnz_ibmdb2.tex routines.tex scripts.tex udf_sp_ref.tex ; do echo "$(git log -1 --pretty="%at" $i) $i"; done |sort |tail -1 |cut -c12-`
 fi
 OUT=${F}_info.tex
 
