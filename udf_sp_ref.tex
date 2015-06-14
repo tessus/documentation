@@ -8,7 +8,7 @@
 \end{verbatim}
 bcrypt algorithm. The {\tt bcrypt} routine is compatible to the function used in Apache's {\tt htpasswd} utility.\\
 \\
-The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 120 bytes.\\
+The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 4096 bytes.\\
 \\
 The result of the function is CHAR(60). The result can be null; if the argument is null, the result is the null value.\\
 \\
@@ -47,7 +47,7 @@ Examples:
 \end{verbatim}
 MD5 hash. The {\tt php\_md5} routine is compatible to the PHP md5 function.\\
 \\
-The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 120 bytes.\\
+The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 4096 bytes.\\
 \\
 The result of the function is CHAR(32). The result can be null; if the argument is null, the result is the null value.\\
 \\
@@ -86,7 +86,7 @@ Examples:
 \end{verbatim}
 Seeded MD5 hash. The {\tt apr\_md5} routine is compatible to the function used in Apache's {\tt htpasswd} utility.\\
 \\
-The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 120 bytes.\\
+The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 4096 bytes.\\
 \\
 The result of the function is CHAR(37). The result can be null; if the argument is null, the result is the null value.\\
 \\
@@ -125,7 +125,7 @@ Examples:
 \end{verbatim}
 Unix crypt. The {\tt apr\_crypt} routine is compatible to the function used in Apache's {\tt htpasswd} utility.\\
 \\
-The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 120 bytes.\\
+The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 4096 bytes.\\
 \\
 The result of the function is CHAR(13). The result can be null; if the argument is null, the result is the null value.\\
 \\
@@ -164,7 +164,7 @@ Examples:
 \end{verbatim}
 SHA1 algorithm. The {\tt apr\_sha1} routine is compatible to the function used in Apache's {\tt htpasswd} utility.\\
 \\
-The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 120 bytes.\\
+The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 4096 bytes.\\
 \\
 The result of the function is CHAR(33). The result can be null; if the argument is null, the result is the null value.\\
 \\
@@ -203,7 +203,7 @@ Examples:
 \end{verbatim}
 SHA256 algorithm. The {\tt apr\_sha256} routine returns the identifier {\tt \{SHA256\}} plus the base64 encoded sha256 hash.\\
 \\
-The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 120 bytes.\\
+The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 4096 bytes.\\
 \\
 The result of the function is CHAR(52). The result can be null; if the argument is null, the result is the null value.\\
 \\
@@ -242,8 +242,7 @@ Examples:
 \end{verbatim}
 This routine can be used to validate a password against a hash.\\
 \\
-The two input arguments can be character strings that are either a CHAR or VARCHAR not exceeding 120 bytes. The second parameter (hash) must not be 
-empty, otherwise an \mbox{{\tt SQLSTATE 39701}} is returned.\\
+The two input arguments can be character strings that are either a CHAR or VARCHAR not exceeding 4096 bytes (password) and 120 bytes (hash). The second parameter (hash) must not be empty, otherwise an \mbox{{\tt SQLSTATE 39701}} is returned.\\
 \\
 The result of the routine is an INTEGER. If the password is valid, 1 is returned. If the password is not valid, 0 is returned. The result can be null; if the argument is null, the result is the null value.\\
 \\
@@ -252,7 +251,7 @@ Examples:
 1)
     SELECT validate_pw('testpwd', 'cqs7uOvz8KBlk') FROM SYSIBM.SYSDUMMY1"
 
-    1          
+    1
     -----------
               1
 
