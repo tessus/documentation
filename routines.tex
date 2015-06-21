@@ -1,23 +1,27 @@
 \section{db2-hash-routines}
 \subsection{Building the library and registering the UDFs and SPs}
-Login as the instance user. Change the {\tt DB2PATH} variable in the {\tt makertn} script for your environment.
-\begin{verbatim}
-DB2PATH=/home/db2inst1/sqllib
-\end{verbatim}
-Set {\tt DB2PATH} to the directory where DB2 is accessed. This is usually the instance home directory.\\
-\\
-After changing the above setting, start the script\\
+Login as the instance user and run the script\\
 \\
 \begin{tabular}{@{} lll @{}}
 Linux and AIX & & {\tt ./makertn}\\
 Win32         & & {\tt makertn.bat}\\
 \end{tabular}
 \\\\
-The UDFs and SPs are written in ANSI C and should compile on all platforms.
-You can use the {\tt bldrtn} script in your {\tt sqllib/samples/c} directory as a good start.
-The only thing that you have to do is to install APR and \mbox{APR-util}.
+The {\tt makertn} script detects the DB2 instance directory and locates {\tt apr-1-config} and {\tt apu-1-config} automatically. If for some reason the script cannot set either one of the necessary variables, they have to be set manually.
+Uncomment and change the following variables in the {\tt makertn} script.
+\begin{verbatim}
+DB2PATH=
+APRPATH=
+APUPATH=
+\end{verbatim}
+Set {\tt DB2PATH} to the directory where DB2 is accessed. This is usually the instance home directory.\\
+Set APRPATH to where apr-1-config is located.\\
+Set APUPATH to where apu-1-config is located.\\
+\\
+The UDFs and SPs are written in ANSI C and should compile on all platforms.\\
+\\
+The only requirements are APR and \mbox{APR-util}.
 You can get APR and APR-util at \url{http://apr.apache.org/} \\
-Furthermore you need to add the compiler and linker flags for APR (see makertn).\\
 \\
 To register the UDFs and SPs, connect to your database and run the script:
 \begin{verbatim}
