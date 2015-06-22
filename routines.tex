@@ -43,5 +43,16 @@ The {\tt php\_md5} routine is compatible to the PHP md5 function.\\
 The {\tt apr\_md5}, {\tt apr\_crypt}, {\tt apr\_sha1} and {\tt bcrypt} routines are compatible to the functions used in Apache's {\tt htpasswd} utility.\\
 The {\tt apr\_sha256} routine returns the identifier {\tt \{SHA256\}} plus the base64 encoded sha256 hash.\\
 \\
-{\tt validate\_pw} can be used to validate a password against a hash.
+{\tt validate\_pw} can be used to validate a password against a hash.\\
+\\
+On systems with glibc2, the {\tt validate\_pw} routine will also validate hashes of the form \mbox{\tt \$id\$salt\$encrypted}. The following values of {\tt id} are supported:\\
+
+\begin{tabular}{l|l}
+ ID  &  Method                                                              \\ \hline
+1    &  MD5                                                                 \\
+2a   &  Blowfish (not in mainline glibc; added in some Linux distributions) \\
+5    &  SHA-256 (since glibc 2.7)                                           \\
+6    &  SHA-512 (since glibc 2.7)                                           \\
+\end{tabular}
+
 \paragraph{Note:}{In win32 environments {\tt apr\_crypt} returns the output of {\tt bcrypt}, if available. If {\tt bcrypt} is not available, the output of {\tt apr\_md5} is returned.}
