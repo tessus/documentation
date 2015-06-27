@@ -1,6 +1,4 @@
-%\documentclass[11pt,a4paper]{scrartcl}
-%\documentclass[11pt,a4paper]{article}
-\documentclass[11pt,letterpaper]{article}
+\documentclass[11pt,letterpaper]{scrartcl}
 \usepackage{tabularx}
 \usepackage{array}
 \usepackage{verbatim}
@@ -22,6 +20,9 @@
   breaklinks=true
 ]{hyperref}
 
+\def\tt{\normalfont\ttfamily}
+\def\rm{\normalfont\rmfamily}
+
 \newcommand{\stt}[1]{\tt \small #1}
 \newcommand{\showtext}[2]{
 \ifdata
@@ -34,7 +35,6 @@
 \title{Documentation for\\
 db2-hash-routines}
 \date{\longdate{\formatdate{\CommitD{}}{\CommitM{}}{\CommitY{}}}}
-%\date{\usdate{\formatdate{\CommitD{}}{\CommitM{}}{\CommitY{}}}}
 \maketitle
 \setcounter{page}{0}
 \thispagestyle{empty}
@@ -47,10 +47,8 @@ db2-hash-routines is a package which provides \mbox{User Defined Functions} and 
 \begin{center}
 \href{http://tessus.github.io/db2-hash-routines}{http://tessus.github.io/db2-hash-routines}\\
 
-%\ifdata
 {\tiny \rm \showtext{Date: }\CommitDateTimeTz{} }
 {\tiny \rm \showtext{Id: }\CommitHashAbbrev{} }
-%\fi
 
 \end{center}
 \newpage

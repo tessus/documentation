@@ -1,10 +1,11 @@
-\documentclass[11pt,letterpaper]{article}
+\documentclass[11pt,letterpaper]{scrartcl}
 \usepackage{tabularx}
 \usepackage{array}
 \usepackage{verbatim}
 \newenvironment{sverbatim}{\begingroup\small\verbatim}{\endverbatim\endgroup}
 \usepackage{lastpage}
 \usepackage{fancyhdr}
+%\usepackage{scrlayer-scrpage}
 \usepackage[nodayofweek]{datetime}
 \input{mod_authnz_ibmdb2_info}
 \usepackage[
@@ -19,6 +20,9 @@
   backref=true,
   breaklinks=true
 ]{hyperref}
+
+\def\tt{\normalfont\ttfamily}
+\def\rm{\normalfont\rmfamily}
 
 \newcommand{\stt}[1]{\tt \small #1}
 \newcommand{\showtext}[2]{
@@ -55,6 +59,7 @@ mod\_authnz\_ibmdb2 is an Apache authentication module using IBM\textsuperscript
 \tableofcontents
 \newpage
 \pagestyle{fancy}
+%\pagestyle{scrheadings}
 \lhead{}
 \chead{Documentation for mod\_authnz\_ibmdb2}
 \rhead{}
@@ -195,7 +200,7 @@ For example, if your user table has an {\tt active} integer field and you only w
 {\tt AuthIBMDB2UserCondition active=1}\\
 \newpage
 \noindent
-If {\tt AuthIBMDB2UserProc} is set, the named \hyperlink{husersp}{stored procedure}\footnote{see Appendix \ref{usersp}} is responsible for returning the password of the user in question to the module. It must return exactly one value and row - the password. If set, {\tt AuthIBMDB2UserTable}, {\tt AuthIBMDB2NameField}, {\tt AuthIBMDB2PasswordField}, {\tt AuthIBMDB2UserCondition} are ignored. If {\tt AuthIBMDB2NoPasswd} is {\tt On}, then the username has to be returned instead of the password. The stored procedure must have the following parameter format:
+If {\tt AuthIBMDB2UserProc} is set, the named \hyperlink{husersp}{stored procedure}\footnote{see Appendix \ref{usersp}} is responsible for returning the password of the user in question to the module. It must return exactly one value and row - the password. If set, {\tt AuthIBMDB2UserTable}, {\tt AuthIBMDB2NameField}, {\tt AuthIBMDB2PasswordField}, {\tt AuthIBMDB2UserCondition} are ignored.\\If {\tt AuthIBMDB2NoPasswd} is {\tt On}, then the username has to be returned instead of the password. The stored procedure must have the following parameter format:
 \begin{verbatim}
 CREATE PROCEDURE user_procedure_name ( IN VARCHAR, OUT VARCHAR )
 \end{verbatim}
