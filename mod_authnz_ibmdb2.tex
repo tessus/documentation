@@ -1,5 +1,3 @@
-%\documentclass[11pt,a4paper]{scrartcl}
-%\documentclass[11pt,a4paper]{article}
 \documentclass[11pt,letterpaper]{article}
 \usepackage{tabularx}
 \usepackage{array}
@@ -94,7 +92,7 @@ DB2PATH=/home/db2inst1/sqllib
 EXTRA_LFLAG="-Wl,-G,-blibpath:$DB2PATH/lib"     (for AIX)
 EXTRA_LFLAG="-Wl,-rpath,$DB2PATH/lib"           (for Linux)
 
-apxs -c -ldb2 $EXTRA_LFLAG mod_authnz_ibmdb2.c
+apxs -c -ldb2 $EXTRA_LFLAG mod_authnz_ibmdb2.c caching.c
 \end{verbatim}
 If the {\tt sqlcli1.h} header file cannot be found, add the {\tt -I} option to specify the
 directory where {\tt sqlcli1.h} can be found.
@@ -105,7 +103,7 @@ For example:
 \begin{verbatim}
 apxs -c -L/home/db2inst1/sqllib/lib        \
   -I/home/db2inst1/sqllib/include -ldb2    \
-  $EXTRA_LFLAG mod_authnz_ibmdb2.c
+  $EXTRA_LFLAG mod_authnz_ibmdb2.c caching.c
 \end{verbatim}
 After creating the module, it has to be moved to the Apache module directory. This is also done with the apxs utility:
 
@@ -197,11 +195,11 @@ For example, if your user table has an {\tt active} integer field and you only w
 {\tt AuthIBMDB2UserCondition active=1}\\
 \newpage
 \noindent
-If {\tt AuthIBMDB2UserProc} is set, the named \hyperlink{husersp}{stored procedure}\footnote{see Appendix \ref{usersp}} is responsible for returning the password of the user in question to the module. It must return exactly one value and row - the password. If set,\\ {\tt AuthIBMDB2UserTable}, {\tt AuthIBMDB2NameField}, {\tt AuthIBMDB2PasswordField}, {\tt AuthIBMDB2UserCondition} are ignored. If {\tt AuthIBMDB2NoPasswd} is {\tt On}, then the username has to be returned instead of the password. The stored procedure must have the following parameter format:
+If {\tt AuthIBMDB2UserProc} is set, the named \hyperlink{husersp}{stored procedure}\footnote{see Appendix \ref{usersp}} is responsible for returning the password of the user in question to the module. It must return exactly one value and row - the password. If set, {\tt AuthIBMDB2UserTable}, {\tt AuthIBMDB2NameField}, {\tt AuthIBMDB2PasswordField}, {\tt AuthIBMDB2UserCondition} are ignored. If {\tt AuthIBMDB2NoPasswd} is {\tt On}, then the username has to be returned instead of the password. The stored procedure must have the following parameter format:
 \begin{verbatim}
 CREATE PROCEDURE user_procedure_name ( IN VARCHAR, OUT VARCHAR )
 \end{verbatim}
-If {\tt AuthIBMDB2GroupProc} is set, the named \hyperlink{hgroupsp}{stored procedure}\footnote{see Appendix \ref{groupsp}} is responsible for returning the groups the user in question belongs to. It must return an open cursor to the result set. If set,\\ {\tt AuthIBMDB2GroupTable}, {\tt AuthIBMDB2NameField}, {\tt AuthIBMDB2GroupField}, {\tt AuthIBMDB2GroupCondition} are ignored. The stored procedure must have the following parameter format:
+If {\tt AuthIBMDB2GroupProc} is set, the named \hyperlink{hgroupsp}{stored procedure}\footnote{see Appendix \ref{groupsp}} is responsible for returning the groups the user in question belongs to. It must return an open cursor to the result set. If set, {\tt AuthIBMDB2GroupTable}, {\tt AuthIBMDB2NameField}, {\tt AuthIBMDB2GroupField}, {\tt AuthIBMDB2GroupCondition} are ignored. The stored procedure must have the following parameter format:
 \begin{verbatim}
 CREATE PROCEDURE group_procedure_name ( IN VARCHAR )
 \end{verbatim}
@@ -299,7 +297,7 @@ git clone https://github.com/tessus/db2-hash-routines.git
 \end{verbatim}
 You can also browse the repositories via the web:\\
 \\
-\begin{tabular}{@{} lr @{}}
+\begin{tabular}{@{} ll @{}}
 mod\_authnz\_ibmdb2 & \url{https://github.com/tessus/mod_authnz_ibmdb2}\\ [0.5ex]
 mod\_auth\_ibmdb2 & \url{https://github.com/tessus/mod_auth_ibmdb2}\\ [0.5ex]
 db2-hash-routines & \url{https://github.com/tessus/db2-hash-routines}\\ [0.5ex]
