@@ -20,12 +20,12 @@ and the settings in the {\tt config.php} file:\\
 {\tt \$usertable} & {\tt = "users";} & {\tt AuthIBMDB2UserTable} \\
 {\tt \$grouptable} & {\tt = "groups";} & {\tt AuthIBMDB2GroupTable} \\
 & & \\
-{\tt \$namefield} & {\tt = "username";} & {\tt AuthIBMDB2NameField} \\	
+{\tt \$namefield} & {\tt = "username";} & {\tt AuthIBMDB2NameField} \\
 {\tt \$passwordfield} & {\tt = "password";} & {\tt AuthIBMDB2PasswordField} \\
 {\tt \$groupfield} & {\tt = "groupname";} & {\tt AuthIBMDB2GroupField} \\
 \end{tabular}
 \\
-\paragraph{Attention:}{The scripts were developed on Linux, therefore they will only work on systems where the {\tt /etc/passwd}, the {\tt /etc/shadow}, the {\tt /etc/group} and the {\tt /etc/gshadow} are in the same form as on Linux systems.}
+\paragraph{Attention:}{The scripts were developed on Linux, therefore they will only work on systems where the {\tt /etc/passwd}, the {\tt /etc/shadow}, the {\tt /etc/group} and the {\tt /etc/gshadow} are in the same format as on Linux systems.}
 \paragraph{Note:}{{\tt user\_imp} and {\tt group\_imp} will work on all systems, because these scripts don't rely on above mentioned files.}
 \subsection{Examples}
 If the settings in the {\tt config.php} are as above and you execute the {\tt ./user\_etc\_imp} script following happens:\\
@@ -33,11 +33,11 @@ If the settings in the {\tt config.php} are as above and you execute the {\tt ./
 All users (except system users like root or mail) are imported from the linux box into the table {\tt users} in the database {\tt auth}.
 The table {\tt users} has {\tt username} as the columnname for the users and {\tt password} as the columnname for the passwords.\\
 \\
-To import the users from an existing htpasswd users file, just run the script
+To import users from an existing htpasswd users file, just run the script
 \begin{verbatim}
 ./user_imp <path-to-userfile>
 \end{verbatim}
-To import the group information from an existing Apache group file, run the script
+To import group information from an existing Apache group file, run the script
 \begin{verbatim}
 ./group_imp <path-to-groupfile>
 \end{verbatim}
