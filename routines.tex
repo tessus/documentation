@@ -32,6 +32,8 @@ db2 -tvf register.ddl
 This library delivers the following routines\footnote{see Appendix \ref{rtnreference} for a reference of the UDFs and SPs}:\\
 \\
 \hyperlink{hbcrypt}{\tt bcrypt}\\
+\hyperlink{hsha256}{\tt sha256}\\
+\hyperlink{hsha512}{\tt sha512}\\
 \hyperlink{hphpmd5}{\tt php\_md5}\\
 \hyperlink{haprmd5}{\tt apr\_md5}\\
 \hyperlink{haprcrypt}{\tt apr\_crypt}\\
@@ -42,6 +44,7 @@ This library delivers the following routines\footnote{see Appendix \ref{rtnrefer
 The {\tt php\_md5} routine is compatible to the PHP md5 function.\\
 The {\tt apr\_md5}, {\tt apr\_crypt}, {\tt apr\_sha1} and {\tt bcrypt} routines are compatible to the functions used in Apache's {\tt htpasswd} utility.\\
 The {\tt apr\_sha256} routine returns the identifier {\tt \{SHA256\}} plus the base64 encoded sha256 hash.\\
+The {\tt sha256} and {\tt sha512} functions return glib2's crypt hashes (if supported).\\
 \\
 {\tt validate\_pw} can be used to validate a password against a hash.\\
 \\

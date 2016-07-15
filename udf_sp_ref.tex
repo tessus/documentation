@@ -38,6 +38,87 @@ Examples:
       Return Status = 0
 \end{verbatim}
 \newpage
+\hypertarget{hsha256}{}
+\subsection{sha256} \label{sha256}
+\begin{verbatim}
+>>-SHA256--(--expression--)------------------------------------><
+
+>>-SHA256--(--expression--,--hash--)---------------------------><
+\end{verbatim}
+SHA256 algorithm. The {\tt sha256} routine returns a glibc2's crypt hash. If the system's crypt does not support sha-256, an \mbox{{\tt SQLSTATE 39702}} is returned.\\
+\\
+The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 4096 bytes.\\
+\\
+The result of the function is CHAR(55). The result can be null; if the argument is null, the result is the null value.\\
+\\
+Examples:
+\begin{verbatim}
+1)
+    INSERT INTO USERS (username, password)
+       VALUES ('test', sha256('testpwd'))
+
+2)
+    SELECT sha256( 'testpwd' ) FROM SYSIBM.SYSDUMMY1
+
+    1
+    -------------------------------------------------------
+    $5$S.LqPR7Z$273zPncMdmJ0dE1WdLldWVBmaHSDUDl8/tW8At8Hc0A
+
+      1 record(s) selected.
+
+3)
+    CALL sha256('testpwd', ?)
+
+      Value of output parameters
+      --------------------------
+      Parameter Name  : HASH
+      Parameter Value : $5$vSDCZr2d$rfh.aDopE5l3lm26AwwcIYnuVdV7/9QBACWukqYyV3/
+
+      Return Status = 0
+\end{verbatim}
+\newpage
+\hypertarget{hsha512}{}
+\subsection{sha512} \label{sha512}
+\begin{verbatim}
+>>-SHA512--(--expression--)------------------------------------><
+
+>>-SHA512--(--expression--,--hash--)---------------------------><
+\end{verbatim}
+SHA512 algorithm. The {\tt sha512} routine returns a glibc2's crypt hash. If the system's crypt does not support sha-512, an \mbox{{\tt SQLSTATE 39702}} is returned.\\
+\\
+The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 4096 bytes.\\
+\\
+The result of the function is CHAR(98). The result can be null; if the argument is null, the result is the null value.\\
+\\
+Examples:
+\begin{verbatim}
+1)
+    INSERT INTO USERS (username, password)
+       VALUES ('test', sha512('testpwd'))
+
+2)
+    SELECT sha512( 'testpwd' ) FROM SYSIBM.SYSDUMMY1
+
+    1
+    ---------------------------------------------------------------------------
+    -----------------------
+    $6$cD33haq7$dl.RqEaLamlesTPVzSIQr4N1MY3BsVZ76VS8qNte0IOIWO2XorMg8U797KKOFGm
+    X8dJhT3WuF6p17HmvvoQ6Q/
+
+      1 record(s) selected.
+
+3)
+    CALL sha512('testpwd', ?)
+
+      Value of output parameters
+      --------------------------
+      Parameter Name  : HASH
+      Parameter Value : $6$1W.m9JN1$Dh.VPl7vy.igGaeDUdDWw6ZlD0xufwDWm0ukpOYknPt
+    djxiSM2yzWBkzHffalb/2axNHPqEi9UUzXUbSm4LGa/
+
+      Return Status = 0
+\end{verbatim}
+\newpage
 \hypertarget{hphpmd5}{}
 \subsection{php\_md5} \label{phpmd5}
 \begin{verbatim}
