@@ -72,61 +72,67 @@ mod\_authnz\_ibmdb2 is an Apache authentication module using IBM\textsuperscript
 \setcounter{page}{1}
 \section{mod\_authnz\_ibmdb2}
 
-\subsection{Building mod\_authnz\_ibmdb2}
-Log in as root user.\\
-\\
-Change the {\tt DB2PATH} and the {\tt APXS} variables in the {\tt makemod} script according to your environment:
+\subsection{Building mod\_authnz\_ibmdb2 from a cloned repository}
+If you want to build the module from a cloned repository, autotools (autoconf, autoheader, automake) are required. The script {\tt autogen.sh} needs autotools to create {\tt configure} from scratch.
 \begin{verbatim}
-# Path settings
+git clone https://github.com/tessus/mod_authnz_ibmdb2.git
 
-DB2PATH=/home/db2inst1/sqllib
-APXS=/usr/local/apache/bin/apxs
+cd mod_authnz_ibmdb2
+./autogen.sh
+./configure
+make install
 \end{verbatim}
-Set {\tt DB2PATH} to the directory where DB2 is accessed. This is usually the instance home directory.\\
+The {\tt configure} script has a few options which are described in detail in subsection \ref{sec:details}.
 \\
-Set {\tt APXS} to the path that points to your apxs binary. The apxs binary is usually installed in the /$<$your apache home$>$/bin directory.\\
-\\
-After changing the above settings, run the script {\tt ./makemod}\\
-\\
-Last but not least the DB2 environment has to be set in the Apache startscript. This is done by sourcing the {\tt db2profile} script, which is located in {\tt DB2PATH}.
-\subsection{Details on building mod\_authnz\_ibmdb2}
-To build the module the Apache utility {\tt apxs} is used. The {\tt EXTRA\_LFLAG} needs to be specified so that the module will find the db2 library during runtime.
+Run {\tt make install} as root or with {\tt sudo}.
+\subsection{Building mod\_authnz\_ibmdb2 from a tarball}
+Download the latest tarball from:\\
+\url{https://github.com/tessus/mod_authnz_ibmdb2/releases/latest}
 \begin{verbatim}
-DB2PATH=/home/db2inst1/sqllib
+tar -xzf mod_authnz_ibmdb2-X.Y.Z.tar.gz
 
-EXTRA_LFLAG="-Wl,-G,-blibpath:$DB2PATH/lib"     (for AIX)
-EXTRA_LFLAG="-Wl,-rpath,$DB2PATH/lib"           (for Linux)
-
-apxs -c -ldb2 $EXTRA_LFLAG mod_authnz_ibmdb2.c caching.c
+cd mod_authnz_ibmdb2
+./configure
+make install
 \end{verbatim}
-If the {\tt sqlcli1.h} header file cannot be found, add the {\tt -I} option to specify the
-directory where {\tt sqlcli1.h} can be found.
-If the db2 library cannot be found, add the {\tt -L} option to specify the
-directory where {\tt libdb2.so} can be found.\\
-
-For example:
-\begin{verbatim}
-apxs -c -L/home/db2inst1/sqllib/lib        \
-  -I/home/db2inst1/sqllib/include -ldb2    \
-  $EXTRA_LFLAG mod_authnz_ibmdb2.c caching.c
-\end{verbatim}
-After creating the module, it has to be moved to the Apache module directory. This is also done with the apxs utility:
-
-\begin{verbatim}
-apxs -i mod_authnz_ibmdb2.la
-\end{verbatim}
-As the next step the DB2 environment has to be set in the Apache startscript. This is done by sourcing the {\tt db2profile} script, which is located in {\tt DB2PATH}.\\
+The {\tt configure} script has a few options which are described in detail in subsection \ref{sec:details}.
 \\
-Finally, add the following directive to your httpd.conf and restart Apache:
+Run {\tt make install} as root or with {\tt sudo}.
+\subsection{Configure options and details on building mod\_authnz\_ibmdb2} \label{sec:details}
+If you run ./configure as a user with a DB2 environment and apxs is in the path, there's nothing else to worry about.\\
+\\
+However, you might have 2 versions of Apache installed and want to choose for which one the module is for, or you don't have the DB2 environment initialized.\\
+\\
+There are options to specify the location of the DB2 home and the
+apxs utility:
+\begin{verbatim}
+--with-apxs=FILE                FILE is the pathname of the Apache tool
 
+--with-IBM_DB2=DIR              DIR is the IBM DB2 instance or home
+                                directory where the DB2 application
+                                development headers and libraries are
+                                located
+\end{verbatim}
+By default man pages are installed automatically, but you can change this by using the following flag:
+\begin{verbatim}
+--disable-man-pages
+\end{verbatim}
+During install the module can also be activated in the Apache config
+file httpd.conf:
+\begin{verbatim}
+--enable-activation
+\end{verbatim}
+After successful configuration the module can be installed with:
+\begin{verbatim}
+make install
+\end{verbatim}
+Be aware that this process needs root privileges.\\
+\\
+If you decide to add the module manually, the following directive in your httpd.conf will do the trick:
 \begin{verbatim}
 LoadModule authnz_ibmdb2_module modules/mod_authnz_ibmdb2.so
 \end{verbatim}
 
-\subsection{Installing the Manpages}
-There is a {\tt man} directory in the path, where you have extracted the mod\_authnz\_ibmdb2 package.\\
-\\
-Change into the man directory and run the script {\tt ./maninstall}
 \newpage
 
 \subsection{Description of the module}
