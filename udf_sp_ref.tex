@@ -38,18 +38,61 @@ Examples:
       Return Status = 0
 \end{verbatim}
 \newpage
+\hypertarget{hsha256hex}{}
+\subsection{sha256\_hex} \label{sha256hex}
+\begin{verbatim}
+>>-SHA256_HEX--(--expression--)--------------------------------><
+
+>>-SHA256_HEX--(--expression--,--hash--)-----------------------><
+\end{verbatim}
+SHA256 algorithm. The {\tt sha256\_hex} routine returns a 64-character hexadecimal hash.\\
+\\
+The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 4096 bytes.\\
+\\
+The result of the function is CHAR(64). The result can be null; if the argument is null, the result is the null value.\\
+\\
+Examples:
+\begin{verbatim}
+1)
+    INSERT INTO USERS (username, password)
+       VALUES ('test', sha256_hex('testpwd'))
+
+2)
+    SELECT sha256_hex('testpwd') FROM SYSIBM.SYSDUMMY1
+
+    1
+    ----------------------------------------------------------------
+    a85b6a20813c31a8b1b3f3618da796271c9aa293b3f809873053b21aec501087
+
+      1 record(s) selected.
+
+3)
+    CALL sha256_hex('testpwd', ?)
+
+      Value of output parameters
+      --------------------------
+      Parameter Name  : HASH
+      Parameter Value : a85b6a20813c31a8b1b3f3618da796271c9aa293b3f809873053b21
+    aec501087
+
+      Return Status = 0
+\end{verbatim}
+\newpage
 \hypertarget{hsha256}{}
 \subsection{sha256} \label{sha256}
 \begin{verbatim}
->>-SHA256--(--expression--)------------------------------------><
+>>-SHA256--(--expression--+---------+--)-----------------------><
+                          '-,--salt-'
 
->>-SHA256--(--expression--,--hash--)---------------------------><
+>>-SHA256--(--expression--+---------+--,--hash--)--------------><
+                          '-,--salt-'
 \end{verbatim}
 SHA256 algorithm. The {\tt sha256} routine returns a glibc2's crypt hash. If the system's crypt does not support sha-256, an \mbox{{\tt SQLSTATE 39702}} is returned.\\
 \\
 The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 4096 bytes.\\
+An optional salt can be specified, which must be a eight-character string chosen from the set [a-z-Z0-9./]. If the salt is not exactly eight characters long, an \mbox{{\tt SQLSTATE 39703}} is returned. If the salt contains invalid characters, an \mbox{{\tt SQLSTATE 39704}} is returned.\\
 \\
-The result of the function is CHAR(55). The result can be null; if the argument is null, the result is the null value.\\
+The result of the function is CHAR(55). The result can be null; if one of the arguments is null, the result is the null value.\\
 \\
 Examples:
 \begin{verbatim}
@@ -75,20 +118,42 @@ Examples:
       Parameter Value : $5$vSDCZr2d$rfh.aDopE5l3lm26AwwcIYnuVdV7/9QBACWukqYyV3/
 
       Return Status = 0
+
+4)
+    SELECT sha256('testpwd', '12345678') FROM SYSIBM.SYSDUMMY1
+
+    1
+    -------------------------------------------------------
+    $5$12345678$.oVAnOr/.FK8fYNiFPvoXPQvEOT9Calecygw6K9wIb9
+
+      1 record(s) selected.
+
+5)
+    CALL sha256('testpwd', '12345678', ?)
+
+    Value of output parameters
+    --------------------------
+    Parameter Name  : HASH
+    Parameter Value : $5$12345678$.oVAnOr/.FK8fYNiFPvoXPQvEOT9Calecygw6K9wIb9
+
+    Return Status = 0
 \end{verbatim}
 \newpage
 \hypertarget{hsha512}{}
 \subsection{sha512} \label{sha512}
 \begin{verbatim}
->>-SHA512--(--expression--)------------------------------------><
+>>-SHA512--(--expression--+---------+--)-----------------------><
+                          '-,--salt-'
 
->>-SHA512--(--expression--,--hash--)---------------------------><
+>>-SHA512--(--expression--+---------+--,--hash--)--------------><
+                          '-,--salt-'
 \end{verbatim}
 SHA512 algorithm. The {\tt sha512} routine returns a glibc2's crypt hash. If the system's crypt does not support sha-512, an \mbox{{\tt SQLSTATE 39702}} is returned.\\
 \\
 The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 4096 bytes.\\
+An optional salt can be specified, which must be a eight-character string chosen from the set [a-z-Z0-9./]. If the salt is not exactly eight characters long, an \mbox{{\tt SQLSTATE 39703}} is returned. If the salt contains invalid characters, an \mbox{{\tt SQLSTATE 39704}} is returned.\\
 \\
-The result of the function is CHAR(98). The result can be null; if the argument is null, the result is the null value.\\
+The result of the function is CHAR(98). The result can be null; if one of the arguments is null, the result is the null value.\\
 \\
 Examples:
 \begin{verbatim}
@@ -117,6 +182,28 @@ Examples:
     djxiSM2yzWBkzHffalb/2axNHPqEi9UUzXUbSm4LGa/
 
       Return Status = 0
+
+4)
+    SELECT sha512('testpwd', '12345678') FROM SYSIBM.SYSDUMMY1
+
+    1
+    ---------------------------------------------------------------------------
+    -----------------------
+    $6$12345678$tlHrypdWTz6FqubBpgL/ePlxr4lZuQ8OK1zfV6zWUmGJSz.5kGWwQGjg69Qm1Bm
+    3.DvILruqA61o3EHsxSoko1
+
+      1 record(s) selected.
+
+5)
+    CALL sha512('testpwd', '12345678', ?)
+
+      Value of output parameters
+      --------------------------
+      Parameter Name  : HASH
+      Parameter Value : $6$12345678$tlHrypdWTz6FqubBpgL/ePlxr4lZuQ8OK1zfV6zWUmGJS
+    z.5kGWwQGjg69Qm1Bm3.DvILruqA61o3EHsxSoko1
+
+    Return Status = 0
 \end{verbatim}
 \newpage
 \hypertarget{hphpmd5}{}
