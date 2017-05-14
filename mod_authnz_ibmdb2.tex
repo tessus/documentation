@@ -133,6 +133,14 @@ If you decide to add the module manually, the following directive in your httpd.
 LoadModule authnz_ibmdb2_module modules/mod_authnz_ibmdb2.so
 \end{verbatim}
 
+\subsection{Additional Apache configuration}
+The DB2 environment has to be set, before starting Apache. There are several ways to accomplish that:
+\begin{itemize}
+\item source the DB2 environment manually
+\item set the DB2 environment in the {\tt apachectl} script
+\item set the DB2 environment in the {\tt init.d} or {\tt systemd} script
+\end{itemize}
+In fact, the only environment variable really necessary is {\tt DB2INSTANCE}.
 \newpage
 
 \subsection{Description of the module}
