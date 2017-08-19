@@ -78,6 +78,45 @@ Examples:
       Return Status = 0
 \end{verbatim}
 \newpage
+\hypertarget{hsha1hex}{}
+\subsection{sha1\_hex} \label{sha1hex}
+\begin{verbatim}
+>>-SHA1_HEX--(--expression--)----------------------------------><
+
+>>-SHA1_HEX--(--expression--,--hash--)-------------------------><
+\end{verbatim}
+SHA1 algorithm. The {\tt sha1\_hex} routine returns a 40-character hexadecimal hash.\\
+\\
+The argument can be a character string that is either a \mbox{CHAR} or \mbox{VARCHAR} not exceeding 4096 bytes.\\
+\\
+The result of the function is CHAR(40). The result can be null; if the argument is null, the result is the null value.\\
+\\
+Examples:
+\begin{verbatim}
+1)
+    INSERT INTO USERS (username, password)
+       VALUES ('test', sha1_hex('testpwd'))
+
+2)
+    SELECT sha1_hex('testpwd') FROM SYSIBM.SYSDUMMY1
+
+    1
+    ----------------------------------------
+    98ef0758e6aac6f9a9e1197548c8190b72c9581d
+
+      1 record(s) selected.
+
+3)
+    CALL sha1_hex('testpwd', ?)
+
+      Value of output parameters
+      --------------------------
+      Parameter Name  : HASH
+      Parameter Value : 98ef0758e6aac6f9a9e1197548c8190b72c9581d
+
+      Return Status = 0
+\end{verbatim}
+\newpage
 \hypertarget{hsha256}{}
 \subsection{sha256} \label{sha256}
 \begin{verbatim}
